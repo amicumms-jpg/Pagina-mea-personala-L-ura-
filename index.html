@@ -190,11 +190,11 @@
     </div>
 
     <!-- Modal Legal / Termeni -->
-    <div id="legalModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div id="legalModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-gray-900 border border-gray-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center pb-3 border-b border-gray-800 mb-4">
                 <h3 class="text-lg font-bold text-white" id="legalModalTitle">Termeni și Condiții</h3>
-                <button onclick="openLegalModal()" class="text-gray-400 hover:text-white">
+                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-white">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -328,10 +328,12 @@
             document.getElementById('modalPlanName').textContent = name;
             document.getElementById('modalPlanPrice').textContent = price + " LEI";
             document.getElementById('donateModal').classList.remove('hidden');
+            document.getElementById('donateModal').classList.add('flex');
         }
 
         function closeDonateModal() {
             document.getElementById('donateModal').classList.add('hidden');
+            document.getElementById('donateModal').classList.remove('flex');
         }
 
         // Modale Legale
@@ -359,10 +361,12 @@
             }
 
             document.getElementById('legalModal').classList.remove('hidden');
+            document.getElementById('legalModal').classList.add('flex');
         }
 
         function closeLegalModal() {
             document.getElementById('legalModal').classList.add('hidden');
+            document.getElementById('legalModal').classList.remove('flex');
         }
 
         // --- SISTEM DE SECURITATE ANTI-SCREENSHOT ȘI COPIERE ---
