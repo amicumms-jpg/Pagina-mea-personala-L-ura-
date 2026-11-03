@@ -9,44 +9,22 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* CSS Anti-Copiere și Protecție Captură */
-        body {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-        }
-
-        img, video {
-            -webkit-user-drag: none;
-            -khtml-user-drag: none;
-            -moz-user-drag: none;
-            -o-user-drag: none;
-        }
-
-        /* Ascundere conținut la print / screenshot prin browser */
+        /* Ascundere conținut la print prin browser */
         @media print {
             body {
                 display: none !important;
             }
         }
-
-        /* Animație Blur Shield */
-        .privacy-blur {
-            filter: blur(25px) opacity(0.1);
-            transition: filter 0.3s ease;
-        }
     </style>
 </head>
 <body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col font-sans selection:bg-none">
 
-    <!-- Privacy Overlay (Protecție Snipping Tool / Focus Lost) -->
+    <!-- Privacy Overlay (Protecție Focus / Schimbare fereastră) -->
     <div id="privacyShield" class="fixed inset-0 bg-black/95 z-[9999] hidden flex-col items-center justify-center text-center p-6 backdrop-blur-xl">
         <div class="bg-pink-950/40 border border-pink-500/30 p-8 rounded-2xl max-w-md shadow-2xl">
             <i data-lucide="shield-alert" class="w-16 h-16 text-pink-500 mx-auto mb-4 animate-bounce"></i>
             <h3 class="text-xl font-bold text-white mb-2">Conținut Protejat</h3>
-            <p class="text-gray-400 text-sm">Captura de ecran sau comutarea ferestrei este dezactivată pentru protejarea drepturilor de autor.</p>
+            <p class="text-gray-400 text-sm">Comutarea ferestrei este dezactivată temporar pentru protejarea drepturilor de autor.</p>
         </div>
     </div>
 
@@ -74,8 +52,8 @@
             <div class="h-32 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-700 relative"></div>
             <div class="px-6 pb-6 relative">
                 <div class="flex justify-between items-end -mt-12 mb-4">
-                    <div class="relative cursor-pointer" onclick="handleSecretUnlock()">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
+                    <div class="relative cursor-pointer" onclick="handleSecretUnlock()" title="Apasă de 5 ori pentru deblocare VIP">
+                        <img src="https://i.postimg.cc/MpVD31KR/IMG-20261103-210638-366.jpg" 
                              alt="L@ura M." 
                              class="w-24 h-24 rounded-full border-4 border-gray-900 object-cover shadow-lg active:opacity-80 transition">
                         <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-gray-900 rounded-full"></span>
@@ -147,7 +125,7 @@
             
             <div class="flex items-center justify-center space-x-2 text-pink-500 font-semibold mb-2">
                 <i data-lucide="shield-check" class="w-4 h-4"></i>
-                <span>Conținut Protejat & Salvat Anti-Copiere</span>
+                <span>Conținut Protejat & Sigur</span>
             </div>
 
             <p class="leading-relaxed text-gray-400">
@@ -219,7 +197,7 @@
 
         let userTier = 0; // 0: Vizitator simplu, 100: VIP complet
 
-        // Date Postări (cu comentarii și aprecieri incluse)
+        // Date Postări (Poze și Videoclipuri YouTube)
         const posts = [
             {
                 id: 1,
@@ -227,7 +205,7 @@
                 tier: 0,
                 type: "photo",
                 date: "Astăzi",
-                text: "Un set foto complet gratuit pentru vizitatorii mei! 🌸 Atinge butonul de mărire pentru ecran complet.",
+                text: "Un set foto complet gratuit pentru vizitatorii mei! 🌸",
                 mediaUrl: "https://i.postimg.cc/mD3J4J4Y/download.jpg",
                 likes: 310,
                 likedByMe: false,
@@ -256,8 +234,8 @@
                 tier: 50,
                 type: "video",
                 date: "Ieri",
-                text: "Un scurt clip din culise! 🎥",
-                mediaUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+                text: "Un scurt clip video din culise! 🎥 (Pachet Video)",
+                mediaUrl: "dQw4w9WgXcQ", // ID-ul videoclipului de pe YouTube
                 likes: 289,
                 likedByMe: false,
                 comments: []
@@ -330,10 +308,60 @@
                     </div>
                 `).join('');
 
+                // Generare conținut media (Poză sau Video YouTube)
+                let mediaContent = '';
+                if (post.type === 'video') {
+                    mediaContent = `
+                        <div class="relative rounded-xl overflow-hidden bg-gray-950 h-[380px] flex items-center justify-center">
+                            ${isUnlocked ? `
+                                <iframe src="https://www.youtube-nocookie.com/embed/${post.mediaUrl}?rel=0" class="w-full h-full border-0" allowfullscreen></iframe>
+                            ` : `
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover privacy-blur">
+                            `}
+                            
+                            ${!isUnlocked ? `
+                                <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3 z-10">
+                                    <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
+                                        <i data-lucide="lock" class="w-6 h-6"></i>
+                                    </div>
+                                    <h5 class="text-base font-bold text-white">Clip Video Confidențial</h5>
+                                    <p class="text-xs text-gray-400 max-w-xs">Efectuează o donație de minim ${post.tier} LEI prin Aircash pentru a debloca acest videoclip.</p>
+                                    <button onclick="openDonateModal('Pachet ${post.tier} LEI', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 transition">
+                                        Plătește prin Aircash (${post.tier} LEI)
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    mediaContent = `
+                        <div class="relative rounded-xl overflow-hidden bg-gray-950 min-h-[300px] flex items-center justify-center">
+                            <img src="${post.mediaUrl}" class="w-full h-[380px] object-cover ${isUnlocked ? '' : 'privacy-blur'}">
+
+                            ${!isUnlocked ? `
+                                <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3 z-10">
+                                    <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
+                                        <i data-lucide="lock" class="w-6 h-6"></i>
+                                    </div>
+                                    <h5 class="text-base font-bold text-white">Conținut Confidențial</h5>
+                                    <p class="text-xs text-gray-400 max-w-xs">Efectuează o donație de minim ${post.tier} LEI prin Aircash pentru a vizualiza această postare.</p>
+                                    <button onclick="openDonateModal('Pachet ${post.tier} LEI', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 transition">
+                                        Plătește prin Aircash (${post.tier} LEI)
+                                    </button>
+                                </div>
+                            ` : `
+                                <button onclick="openImageModal('${post.mediaUrl}')" class="absolute bottom-3 right-3 bg-pink-600 hover:bg-pink-500 active:scale-95 px-3.5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-2 shadow-2xl border border-white/20 z-20 transition">
+                                    <i data-lucide="maximize-2" class="w-4 h-4"></i> Mărește poza
+                                </button>
+                            `}
+                        </div>
+                    `;
+                }
+
                 postCard.innerHTML = `
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
-                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="w-10 h-10 rounded-full object-cover">
+                            <img src="https://i.postimg.cc/MpVD31KR/IMG-20261103-210638-366.jpg" class="w-10 h-10 rounded-full object-cover border border-pink-500/30">
                             <div>
                                 <h4 class="font-bold text-sm text-white flex items-center gap-1">${post.author} <i data-lucide="badge-check" class="w-4 h-4 text-pink-500"></i></h4>
                                 <span class="text-[11px] text-gray-500">${post.date}</span>
@@ -346,29 +374,7 @@
 
                     <p class="text-sm text-gray-200">${post.text}</p>
 
-                    <!-- Zona media / Blocare sau Fullscreen -->
-                    <div class="relative rounded-xl overflow-hidden bg-gray-950 min-h-[300px] flex items-center justify-center">
-                        
-                        <img src="${post.mediaUrl}" 
-                             class="w-full h-[380px] object-cover ${isUnlocked ? '' : 'privacy-blur'}">
-
-                        ${!isUnlocked ? `
-                            <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3 z-10">
-                                <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
-                                    <i data-lucide="lock" class="w-6 h-6"></i>
-                                </div>
-                                <h5 class="text-base font-bold text-white">Conținut Confidențial</h5>
-                                <p class="text-xs text-gray-400 max-w-xs">Efectuează o donație de minim ${post.tier} LEI prin Aircash pentru a vizualiza această postare.</p>
-                                <button onclick="openDonateModal('Pachet ${post.tier} LEI', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 transition">
-                                    Plătește prin Aircash (${post.tier} LEI)
-                                </button>
-                            </div>
-                        ` : `
-                            <button onclick="openImageModal('${post.mediaUrl}')" class="absolute bottom-3 right-3 bg-pink-600 hover:bg-pink-500 active:scale-95 px-3.5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-2 shadow-2xl border border-white/20 z-20 transition">
-                                <i data-lucide="maximize-2" class="w-4 h-4"></i> Mărește poza
-                            </button>
-                        `}
-                    </div>
+                    ${mediaContent}
 
                     <!-- Butoane Aprecieri și Secțiune Comentarii -->
                     <div class="space-y-3 pt-2 border-t border-gray-800/60 text-xs">
@@ -503,31 +509,8 @@
             document.getElementById('legalModal').classList.remove('flex');
         }
 
-        // --- SISTEM DE SECURITATE ANTI-SCREENSHOT ȘI COPIERE ---
-        document.addEventListener('contextmenu', e => e.preventDefault());
-
-        document.addEventListener('keydown', e => {
-            if (
-                e.key === 'PrintScreen' ||
-                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
-                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P')) ||
-                e.key === 'F12'
-            ) {
-                e.preventDefault();
-                showPrivacyShield();
-            }
-        });
-
+        // --- SISTEM DE SECURITATE (BLOCARE LA PIERderea FOCUSULUI / SCHIMBARE TAB) ---
         const privacyShield = document.getElementById('privacyShield');
-
-        function showPrivacyShield() {
-            privacyShield.classList.remove('hidden');
-            privacyShield.classList.add('flex');
-            setTimeout(() => {
-                privacyShield.classList.add('hidden');
-                privacyShield.classList.remove('flex');
-            }, 2500);
-        }
 
         window.addEventListener('blur', () => {
             privacyShield.classList.remove('hidden');
