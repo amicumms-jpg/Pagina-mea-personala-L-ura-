@@ -90,7 +90,7 @@
                 </div>
 
                 <p class="mt-3 text-sm text-gray-300 leading-relaxed">
-                    Bine ai venit pe pagina mea! Aici postez fotografii și clipuri video exclusive pe care nu le public nicăieri altundeva. Susține activitatea mea printr-o donație pentru a debloca conținutul! ✨
+                    Bine ai venit pe pagina mea! Aici postez fotografii și clipuri video exclusive. Unele postări sunt complet gratuite, iar altele necesită o susținere prin donație! ✨
                 </p>
 
                 <!-- Planuri Donație Aircash -->
@@ -120,7 +120,7 @@
         <div class="flex items-center justify-between border-b border-gray-800 pb-3">
             <div class="flex gap-2">
                 <button onclick="filterFeed('all')" id="filter-all" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-pink-600 text-white shadow-lg">Toate</button>
-                <button onclick="filterFeed('photo')" id="filter-photo" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-800 text-gray-400 hover:bg-gray-700">Poze (25 LEI)</button>
+                <button onclick="filterFeed('photo')" id="filter-photo" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-800 text-gray-400 hover:bg-gray-700">Poze</button>
                 <button onclick="filterFeed('video')" id="filter-video" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-800 text-gray-400 hover:bg-gray-700">Video (50 LEI)</button>
             </div>
         </div>
@@ -158,7 +158,7 @@
     </footer>
 
     <!-- Modal Plată Aircash -->
-    <div id="donateModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div id="donateModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-gray-900 border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative text-center">
             <button onclick="closeDonateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
@@ -209,39 +209,39 @@
         document.getElementById('year').textContent = new Date().getFullYear();
 
         // Stare utilizator (Simulare acces)
-        let userTier = 0; // 0: Liber, 25: Poze, 50: Video, 100: Full VIP
+        let userTier = 0; // 0: Vizitator simplu
 
-        // Date Postări
+        // Date Postări (tier: 0 înseamnă gratuit/la liber)
         const posts = [
             {
                 id: 1,
                 author: "L@ura M.",
-                tier: 25,
+                tier: 0, // Gratuit la liber
                 type: "photo",
-                date: "Acum 2 ore",
-                text: "O zi superbă de vară! ☀️ Am pregătit un set foto special pentru susținătorii mei.",
+                date: "Astăzi",
+                text: "Un set foto complet gratuit pentru vizitatorii mei! 🌸 Sper să vă placă.",
                 mediaUrl: "https://i.postimg.cc/mD3J4J4Y/download.jpg",
-                likes: 142
+                likes: 310
             },
             {
                 id: 2,
                 author: "L@ura M.",
-                tier: 50,
-                type: "video",
-                date: "Ieri",
-                text: "Un scurt clip din culisele ultimei mele ședințe foto! 🎥 sper să vă placă!",
-                mediaUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
-                likes: 289
+                tier: 25, // Necesită deblocare 25 LEI
+                type: "photo",
+                date: "Acum 2 ore",
+                text: "O zi superbă de vară! ☀️ Set foto exclusiv.",
+                mediaUrl: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+                likes: 142
             },
             {
                 id: 3,
                 author: "L@ura M.",
-                tier: 25,
-                type: "photo",
-                date: "Acum 3 zile",
-                text: "Relaxare de sfârșit de săptămână ☕💖",
-                mediaUrl: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
-                likes: 95
+                tier: 50, // Necesită deblocare video 50 LEI
+                type: "video",
+                date: "Ieri",
+                text: "Un scurt clip din culise! 🎥",
+                mediaUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+                likes: 289
             }
         ];
 
@@ -257,10 +257,25 @@
             });
 
             filteredPosts.forEach(post => {
-                const isUnlocked = userTier >= post.tier;
+                // Dacă tier este 0, postarea este automat deblocată (gratuită)
+                const isUnlocked = post.tier === 0 || userTier >= post.tier;
 
                 const postCard = document.createElement('article');
                 postCard.className = "bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg space-y-4 p-4";
+
+                let badgeText = '';
+                let badgeClass = '';
+
+                if (post.tier === 0) {
+                    badgeText = 'Gratuit 🌸';
+                    badgeClass = 'bg-emerald-950/80 text-emerald-400 border border-emerald-800/50';
+                } else if (post.tier === 25) {
+                    badgeText = 'Donație 25 LEI';
+                    badgeClass = 'bg-pink-950/80 text-pink-400 border border-pink-800/50';
+                } else {
+                    badgeText = 'Donație 50 LEI';
+                    badgeClass = 'bg-purple-950/80 text-purple-400 border border-purple-800/50';
+                }
 
                 postCard.innerHTML = `
                     <div class="flex items-center justify-between">
@@ -271,8 +286,8 @@
                                 <span class="text-[11px] text-gray-500">${post.date}</span>
                             </div>
                         </div>
-                        <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${post.tier === 25 ? 'bg-pink-950/80 text-pink-400 border border-pink-800/50' : 'bg-purple-950/80 text-purple-400 border border-purple-800/50'}">
-                            ${post.tier === 25 ? 'Donație 25 LEI' : 'Donație 50 LEI'}
+                        <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${badgeClass}">
+                            ${badgeText}
                         </span>
                     </div>
 
