@@ -23,7 +23,6 @@
             -khtml-user-drag: none;
             -moz-user-drag: none;
             -o-user-drag: none;
-            pointer-events: none;
         }
 
         /* Ascundere conținut la print / screenshot prin browser */
@@ -135,11 +134,11 @@
     </main>
 
     <!-- Modal Fullscreen pentru Mărire Poze -->
-    <div id="imageModal" class="fixed inset-0 bg-black/95 z-[99999] hidden items-center justify-center p-4">
-        <button onclick="closeImageModal()" class="absolute top-5 right-5 text-gray-300 hover:text-white bg-gray-800/80 p-2 rounded-full transition">
+    <div id="imageModal" class="fixed inset-0 bg-black/95 z-[99999] hidden items-center justify-center p-4" onclick="closeImageModal()">
+        <button onclick="closeImageModal()" class="absolute top-5 right-5 text-gray-300 hover:text-white bg-gray-800/80 p-2.5 rounded-full transition z-10">
             <i data-lucide="x" class="w-6 h-6"></i>
         </button>
-        <img id="fullscreenImg" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl">
+        <img id="fullscreenImg" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl" onclick="event.stopPropagation()">
     </div>
 
     <!-- Subsol (Footer) cu Termeni și Protecție -->
@@ -276,13 +275,12 @@
             
             profileClickTimer = setTimeout(() => {
                 profileClickCount = 0;
-            }, 2000); // Resetează contorul dacă nu apeși repede în 2 secunde
+            }, 2000);
 
             if (profileClickCount >= 5) {
                 profileClickCount = 0;
                 clearTimeout(profileClickTimer);
                 
-                // Comută starea: Dacă era blocat, deblochează la 100, altfel resetează la 0
                 if (userTier === 0) {
                     userTier = 100;
                     document.getElementById('badgeStatusText').textContent = "Mod Admin / VIP";
@@ -326,7 +324,6 @@
                     badgeClass = 'bg-purple-950/80 text-purple-400 border border-purple-800/50';
                 }
 
-                // Generare listă comentarii
                 let commentsHTML = post.comments.map(c => `
                     <div class="bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/80 text-xs">
                         <span class="font-bold text-pink-400">${c.user}:</span> <span class="text-gray-300">${c.text}</span>
@@ -350,13 +347,14 @@
                     <p class="text-sm text-gray-200">${post.text}</p>
 
                     <!-- Zona media / Blocare sau Fullscreen -->
-                    <div class="relative rounded-xl overflow-hidden bg-gray-950 min-h-[300px] flex items-center justify-center">
+                    <div class="relative rounded-xl overflow-hidden bg-gray-950 min-h-[300px] flex items-center justify-center ${isUnlocked ? 'cursor-pointer group' : ''}"
+                         ${isUnlocked ? `onclick="openImageModal('${post.mediaUrl}')"` : ''}>
+                        
                         <img src="${post.mediaUrl}" 
-                             class="w-full h-[380px] object-cover ${isUnlocked ? 'cursor-pointer hover:scale-105 transition duration-300' : 'privacy-blur'}"
-                             ${isUnlocked ? `onclick="openImageModal('${post.mediaUrl}')"` : ''}>
+                             class="w-full h-[380px] object-cover transition duration-300 ${isUnlocked ? 'group-hover:scale-105' : 'privacy-blur'}">
 
                         ${!isUnlocked ? `
-                            <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3">
+                            <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3 z-10" onclick="event.stopPropagation()">
                                 <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
                                     <i data-lucide="lock" class="w-6 h-6"></i>
                                 </div>
@@ -367,7 +365,7 @@
                                 </button>
                             </div>
                         ` : `
-                            <div class="absolute bottom-3 right-3 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg text-[11px] text-white flex items-center gap-1.5 pointer-events-none">
+                            <div class="absolute bottom-3 right-3 bg-pink-600/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-[11px] text-white flex items-center gap-1.5 shadow-lg border border-white/20 transition group-hover:bg-pink-500">
                                 <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Click pentru mărire
                             </div>
                         `}
