@@ -197,7 +197,7 @@
 
         let userTier = 0; // 0: Vizitator simplu, 100: VIP complet
 
-        // Date Postări (Poze și Videoclipuri YouTube)
+        // Date Postări (Poze și Videoclipul tău YouTube Shorts)
         const posts = [
             {
                 id: 1,
@@ -234,8 +234,8 @@
                 tier: 50,
                 type: "video",
                 date: "Ieri",
-                text: "Un scurt clip video din culise! 🎥 (Pachet Video)",
-                mediaUrl: "dQw4w9WgXcQ", // ID-ul videoclipului de pe YouTube
+                text: "Noul meu videoclip exclusiv! 🎥",
+                mediaUrl: "SNv3eU98uBY", // ID-ul preluat din link-ul tău YouTube Shorts
                 likes: 289,
                 likedByMe: false,
                 comments: []
@@ -308,7 +308,7 @@
                     </div>
                 `).join('');
 
-                // Generare conținut media (Poză sau Video YouTube)
+                // Generare conținut media (Poză sau YouTube Shorts)
                 let mediaContent = '';
                 if (post.type === 'video') {
                     mediaContent = `
@@ -316,7 +316,7 @@
                             ${isUnlocked ? `
                                 <iframe src="https://www.youtube-nocookie.com/embed/${post.mediaUrl}?rel=0" class="w-full h-full border-0" allowfullscreen></iframe>
                             ` : `
-                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover privacy-blur">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover filter blur-2xl opacity-20">
                             `}
                             
                             ${!isUnlocked ? `
@@ -336,7 +336,7 @@
                 } else {
                     mediaContent = `
                         <div class="relative rounded-xl overflow-hidden bg-gray-950 min-h-[300px] flex items-center justify-center">
-                            <img src="${post.mediaUrl}" class="w-full h-[380px] object-cover ${isUnlocked ? '' : 'privacy-blur'}">
+                            <img src="${post.mediaUrl}" class="w-full h-[380px] object-cover ${isUnlocked ? '' : 'filter blur-2xl opacity-20'}">
 
                             ${!isUnlocked ? `
                                 <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3 z-10">
