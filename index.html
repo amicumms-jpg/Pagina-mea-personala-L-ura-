@@ -77,7 +77,7 @@
                     <div class="relative cursor-pointer" onclick="handleSecretUnlock()">
                         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
                              alt="L@ura M." 
-                             class="w-24 h-24 rounded-full border-4 border-gray-900 object-cover shadow-lg hover:opacity-90 transition">
+                             class="w-24 h-24 rounded-full border-4 border-gray-900 object-cover shadow-lg active:opacity-80 transition">
                         <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-gray-900 rounded-full"></span>
                     </div>
                 </div>
@@ -135,7 +135,7 @@
 
     <!-- Modal Fullscreen pentru Mărire Poze -->
     <div id="imageModal" class="fixed inset-0 bg-black/95 z-[99999] hidden items-center justify-center p-4" onclick="closeImageModal()">
-        <button onclick="closeImageModal()" class="absolute top-5 right-5 text-gray-300 hover:text-white bg-gray-800/80 p-2.5 rounded-full transition z-10">
+        <button onclick="closeImageModal()" class="absolute top-5 right-5 text-gray-300 hover:text-white bg-gray-800/80 p-3 rounded-full transition z-10">
             <i data-lucide="x" class="w-6 h-6"></i>
         </button>
         <img id="fullscreenImg" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl" onclick="event.stopPropagation()">
@@ -169,7 +169,7 @@
     <!-- Modal Plată Aircash -->
     <div id="donateModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="bg-gray-900 border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative text-center">
-            <button onclick="closeDonateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+            <button onclick="closeDonateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
@@ -192,7 +192,7 @@
                 Deschide Aircash Pay ➔
             </a>
 
-            <button onclick="closeDonateModal()" class="text-xs text-gray-400 hover:text-white underline">
+            <button onclick="closeDonateModal()" class="text-xs text-gray-400 hover:text-white underline p-2">
                 Închide fereastra
             </button>
         </div>
@@ -203,7 +203,7 @@
         <div class="bg-gray-900 border border-gray-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center pb-3 border-b border-gray-800 mb-4">
                 <h3 class="text-lg font-bold text-white" id="legalModalTitle">Termeni și Condiții</h3>
-                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-white">
+                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-white p-2">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -227,7 +227,7 @@
                 tier: 0,
                 type: "photo",
                 date: "Astăzi",
-                text: "Un set foto complet gratuit pentru vizitatorii mei! 🌸 Dă click pe poză pentru a o mări.",
+                text: "Un set foto complet gratuit pentru vizitatorii mei! 🌸 Atinge butonul de mărire pentru ecran complet.",
                 mediaUrl: "https://i.postimg.cc/mD3J4J4Y/download.jpg",
                 likes: 310,
                 likedByMe: false,
@@ -347,35 +347,34 @@
                     <p class="text-sm text-gray-200">${post.text}</p>
 
                     <!-- Zona media / Blocare sau Fullscreen -->
-                    <div class="relative rounded-xl overflow-hidden bg-gray-950 min-h-[300px] flex items-center justify-center ${isUnlocked ? 'cursor-pointer group' : ''}"
-                         ${isUnlocked ? `onclick="openImageModal('${post.mediaUrl}')"` : ''}>
+                    <div class="relative rounded-xl overflow-hidden bg-gray-950 min-h-[300px] flex items-center justify-center">
                         
                         <img src="${post.mediaUrl}" 
-                             class="w-full h-[380px] object-cover transition duration-300 ${isUnlocked ? 'group-hover:scale-105' : 'privacy-blur'}">
+                             class="w-full h-[380px] object-cover ${isUnlocked ? '' : 'privacy-blur'}">
 
                         ${!isUnlocked ? `
-                            <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3 z-10" onclick="event.stopPropagation()">
+                            <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3 z-10">
                                 <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
                                     <i data-lucide="lock" class="w-6 h-6"></i>
                                 </div>
                                 <h5 class="text-base font-bold text-white">Conținut Confidențial</h5>
                                 <p class="text-xs text-gray-400 max-w-xs">Efectuează o donație de minim ${post.tier} LEI prin Aircash pentru a vizualiza această postare.</p>
-                                <button onclick="openDonateModal('Pachet ${post.tier} LEI', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg hover:scale-105 transition">
+                                <button onclick="openDonateModal('Pachet ${post.tier} LEI', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 transition">
                                     Plătește prin Aircash (${post.tier} LEI)
                                 </button>
                             </div>
                         ` : `
-                            <div class="absolute bottom-3 right-3 bg-pink-600/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-[11px] text-white flex items-center gap-1.5 shadow-lg border border-white/20 transition group-hover:bg-pink-500">
-                                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Click pentru mărire
-                            </div>
+                            <button onclick="openImageModal('${post.mediaUrl}')" class="absolute bottom-3 right-3 bg-pink-600 hover:bg-pink-500 active:scale-95 px-3.5 py-2 rounded-xl text-xs font-bold text-white flex items-center gap-2 shadow-2xl border border-white/20 z-20 transition">
+                                <i data-lucide="maximize-2" class="w-4 h-4"></i> Mărește poza
+                            </button>
                         `}
                     </div>
 
                     <!-- Butoane Aprecieri și Secțiune Comentarii -->
                     <div class="space-y-3 pt-2 border-t border-gray-800/60 text-xs">
                         <div class="flex items-center justify-between text-gray-400">
-                            <button onclick="toggleLike(${post.id})" class="flex items-center space-x-1.5 hover:text-pink-500 transition group">
-                                <i data-lucide="heart" class="w-4 h-4 ${post.likedByMe ? 'fill-pink-500 text-pink-500' : ''} group-hover:scale-110 transition"></i>
+                            <button onclick="toggleLike(${post.id})" class="flex items-center space-x-1.5 hover:text-pink-500 transition group p-1">
+                                <i data-lucide="heart" class="w-4 h-4 ${post.likedByMe ? 'fill-pink-500 text-pink-500' : ''} transition"></i>
                                 <span class="${post.likedByMe ? 'text-pink-400 font-bold' : ''}">${post.likes} Aprecieri</span>
                             </button>
                             <span class="flex items-center gap-1 text-emerald-400">
