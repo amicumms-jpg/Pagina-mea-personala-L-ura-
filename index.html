@@ -93,21 +93,21 @@
                     Bine ai venit pe pagina mea! Aici postez fotografii și clipuri video exclusive pe care nu le public nicăieri altundeva. Susține activitatea mea printr-o donație pentru a debloca conținutul! ✨
                 </p>
 
-                <!-- Planuri Donație -->
+                <!-- Planuri Donație Aircash -->
                 <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <button onclick="openDonateModal('poze', 25)" class="p-3 bg-gray-800/80 hover:bg-gray-800 border border-gray-700 hover:border-pink-500/50 rounded-xl transition text-left group">
+                    <button onclick="openDonateModal('Poze Exclusive', 25)" class="p-3 bg-gray-800/80 hover:bg-gray-800 border border-gray-700 hover:border-pink-500/50 rounded-xl transition text-left group">
                         <div class="text-xs text-gray-400 font-medium">Deblocare Poze</div>
                         <div class="text-lg font-bold text-pink-400 group-hover:text-pink-300">25 LEI</div>
                         <div class="text-[10px] text-gray-500">Acces galeriile foto</div>
                     </button>
 
-                    <button onclick="openDonateModal('video', 50)" class="p-3 bg-gray-800/80 hover:bg-gray-800 border border-gray-700 hover:border-purple-500/50 rounded-xl transition text-left group">
+                    <button onclick="openDonateModal('Poze + Video', 50)" class="p-3 bg-gray-800/80 hover:bg-gray-800 border border-gray-700 hover:border-purple-500/50 rounded-xl transition text-left group">
                         <div class="text-xs text-gray-400 font-medium">Deblocare Video</div>
                         <div class="text-lg font-bold text-purple-400 group-hover:text-purple-300">50 LEI</div>
                         <div class="text-[10px] text-gray-500">Include Poze + Clipurile Video</div>
                     </button>
 
-                    <button onclick="openDonateModal('full', 100)" class="p-3 bg-gradient-to-r from-pink-950/60 to-purple-950/60 hover:from-pink-900/60 hover:to-purple-900/60 border border-pink-500/40 rounded-xl transition text-left group">
+                    <button onclick="openDonateModal('Acces Complet VIP', 100)" class="p-3 bg-gradient-to-r from-pink-950/60 to-purple-950/60 hover:from-pink-900/60 hover:to-purple-900/60 border border-pink-500/40 rounded-xl transition text-left group">
                         <div class="text-xs text-pink-300 font-medium">Acces Complet VIP</div>
                         <div class="text-lg font-bold text-white group-hover:text-pink-200">100 LEI</div>
                         <div class="text-[10px] text-pink-400/80">Acces nelimitat la tot conținutul</div>
@@ -157,41 +157,35 @@
         </div>
     </footer>
 
-    <!-- Modal Donație / Plată -->
+    <!-- Modal Plată Aircash -->
     <div id="donateModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
+        <div class="bg-gray-900 border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative text-center">
             <button onclick="closeDonateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
-            <div class="text-center mb-6">
-                <div class="w-12 h-12 bg-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-3 text-pink-500">
-                    <i data-lucide="heart-handshake" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-xl font-bold text-white">Susține-o pe L@ura M.</h3>
-                <p class="text-xs text-gray-400 mt-1">Selectează opțiunea de plată pentru deblocare instantă</p>
+            <div class="w-12 h-12 bg-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-3 text-pink-500">
+                <i data-lucide="heart-handshake" class="w-6 h-6"></i>
             </div>
+            <h3 class="text-xl font-bold text-white mb-1">Plată prin Aircash 💸</h3>
+            <p class="text-xs text-gray-400 mb-4" id="modalPlanName">Pachet Deblocare</p>
 
-            <div class="bg-gray-800/50 p-4 rounded-xl mb-6 border border-gray-700/50 flex justify-between items-center">
-                <span class="text-sm font-medium text-gray-300" id="modalPlanName">Pachet Deblocare</span>
+            <div class="bg-gray-800/50 p-4 rounded-xl mb-5 border border-gray-700/50 flex justify-between items-center">
+                <span class="text-sm font-medium text-gray-300">Sumă de achitat:</span>
                 <span class="text-xl font-black text-pink-400" id="modalPlanPrice">0 LEI</span>
             </div>
 
-            <div class="space-y-3">
-                <button onclick="processSimulatedPayment()" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 font-bold rounded-xl text-white shadow-lg flex items-center justify-center gap-2 transition">
-                    <i data-lucide="credit-card" class="w-4 h-4"></i>
-                    Plătește Securizat cu Cardul
-                </button>
-                
-                <button onclick="processSimulatedPayment()" class="w-full py-3 bg-gray-800 hover:bg-gray-700 font-semibold rounded-xl text-gray-200 border border-gray-700 flex items-center justify-center gap-2 transition">
-                    <span class="text-xs font-bold text-blue-400">Revolut Pay</span> / Apple Pay
-                </button>
-            </div>
-
-            <p class="text-[10px] text-gray-500 text-center mt-4 flex items-center justify-center gap-1">
-                <i data-lucide="lock" class="w-3 h-3"></i>
-                Tranzacție securizată 256-bit SSL. Acces oferit pe loc.
+            <p class="text-xs text-gray-300 mb-5 leading-relaxed">
+                Apasă pe butonul de mai jos pentru a deschide pagina securizată <strong>Aircash Pay</strong> și a finaliza transferul:
             </p>
+
+            <a href="https://m3.aircash.eu/acpay/username" target="_blank" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 font-bold rounded-xl text-white shadow-lg flex items-center justify-center gap-2 transition mb-3">
+                Deschide Aircash Pay ➔
+            </a>
+
+            <button onclick="closeDonateModal()" class="text-xs text-gray-400 hover:text-white underline">
+                Închide fereastra
+            </button>
         </div>
     </div>
 
@@ -216,7 +210,6 @@
 
         // Stare utilizator (Simulare acces)
         let userTier = 0; // 0: Liber, 25: Poze, 50: Video, 100: Full VIP
-        let currentSelectingPlan = { tier: 0, price: 0, name: '' };
 
         // Date Postări
         const posts = [
@@ -227,7 +220,7 @@
                 type: "photo",
                 date: "Acum 2 ore",
                 text: "O zi superbă de vară! ☀️ Am pregătit un set foto special pentru susținătorii mei.",
-               mediaUrl: "https://i.postimg.cc/mD3J4J4Y/download.jpg",
+                mediaUrl: "https://i.postimg.cc/mD3J4J4Y/download.jpg",
                 likes: 142
             },
             {
@@ -294,10 +287,10 @@
                                 <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
                                     <i data-lucide="lock" class="w-6 h-6"></i>
                                 </div>
-                                <h5 class="text-base font-bold text-white">Conținut Conflidențial</h5>
-                                <p class="text-xs text-gray-400 max-w-xs">Efectuează o donație de minim ${post.tier} LEI pentru a vizualiza această postare.</p>
-                                <button onclick="openDonateModal('${post.type}', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg hover:scale-105 transition">
-                                    Deblochează pentru ${post.tier} LEI
+                                <h5 class="text-base font-bold text-white">Conținut Confidențial</h5>
+                                <p class="text-xs text-gray-400 max-w-xs">Efectuează o donație de minim ${post.tier} LEI prin Aircash pentru a vizualiza această postare.</p>
+                                <button onclick="openDonateModal('Pachet ${post.tier} LEI', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg hover:scale-105 transition">
+                                    Plătește prin Aircash (${post.tier} LEI)
                                 </button>
                             </div>
                         ` : ''}
@@ -330,14 +323,8 @@
             renderFeed(type);
         }
 
-        // Modal Donații
-        function openDonateModal(type, price) {
-            let name = "Pachet Poze Exclusive";
-            if (price === 50) name = "Pachet Poze + Clipurile Video";
-            if (price === 100) name = "Acces Nelimitat Full VIP";
-
-            currentSelectingPlan = { tier: price, price: price, name: name };
-
+        // Modal Donații Aircash
+        function openDonateModal(name, price) {
             document.getElementById('modalPlanName').textContent = name;
             document.getElementById('modalPlanPrice').textContent = price + " LEI";
             document.getElementById('donateModal').classList.remove('hidden');
@@ -345,30 +332,6 @@
 
         function closeDonateModal() {
             document.getElementById('donateModal').classList.add('hidden');
-        }
-
-        // Simulare Plată & Update Statut
-        function processSimulatedPayment() {
-            if (currentSelectingPlan.tier > userTier) {
-                userTier = currentSelectingPlan.tier;
-            }
-            
-            closeDonateModal();
-
-            // Actualizare badge statut
-            const badge = document.getElementById('userBadge');
-            if (userTier === 25) {
-                badge.textContent = "Statut: Susținător Poze";
-                badge.className = "text-xs font-semibold px-3 py-1 rounded-full bg-pink-950 text-pink-400 border border-pink-800";
-            } else if (userTier === 50) {
-                badge.textContent = "Statut: Susținător Video";
-                badge.className = "text-xs font-semibold px-3 py-1 rounded-full bg-purple-950 text-purple-400 border border-purple-800";
-            } else if (userTier >= 100) {
-                badge.textContent = "Statut: Full VIP";
-                badge.className = "text-xs font-semibold px-3 py-1 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold shadow-lg";
-            }
-
-            renderFeed();
         }
 
         // Modale Legale
@@ -380,13 +343,13 @@
                 titleEl.textContent = "Termeni și Condiții";
                 contentEl.innerHTML = `
                     <p><b>1. Introducere:</b> Accesul și utilizarea acestei pagini personale reprezintă acordul dumneavoastră necondiționat față de acești termeni.</p>
-                    <p><b>2. Donații voluntare:</b> Toate plățile efectuate reprezintă o donație voluntară pentru susținerea creatorului de conținut L@ura M. Donațiile nu sunt rambursabile.</p>
+                    <p><b>2. Donații voluntare:</b> Toate plățile efectuate reprezintă o donație voluntară prin Aircash pentru susținerea creatorului de conținut L@ura M. Donațiile nu sunt rambursabile.</p>
                     <p><b>3. Drepturi de autor:</b> Toate fișierele (fotografii, videoclipuri, texte) aparțin în exclusivitate creatorului L@ura M.</p>
                 `;
             } else if (type === 'privacy') {
                 titleEl.textContent = "Politica de Confidențialitate";
                 contentEl.innerHTML = `
-                    <p>Respectăm confidențialitatea datelor dumneavoastră. Datele de plată sunt procesate direct prin intermediul procesatorilor securizați și nu sunt stocate pe serverele noastre.</p>
+                    <p>Respectăm confidențialitatea datelor dumneavoastră. Plățile sunt procesate în siguranță prin intermediul platformei Aircash Pay.</p>
                 `;
             } else if (type === 'dmca') {
                 titleEl.textContent = "DMCA & Drepturi de Autor";
