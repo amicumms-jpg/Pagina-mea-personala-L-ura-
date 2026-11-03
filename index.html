@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina mea personala L@ura! 💝</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* CSS Anti-Copiere și Protecție Captură */
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        img, video {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            pointer-events: none;
+        }
+
+        /* Ascundere conținut la print / screenshot prin browser */
+        @media print {
+            body {
+                display: none !important;
+            }
+        }
+
+        /* Animație Blur Shield */
+        .privacy-blur {
+            filter: blur(25px) opacity(0.1);
+            transition: filter 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col font-sans selection:bg-none">
+
+    <!-- Privacy Overlay (Protecție Snipping Tool / Focus Lost) -->
+    <div id="privacyShield" class="fixed inset-0 bg-black/95 z-[9999] hidden flex-col items-center justify-center text-center p-6 backdrop-blur-xl">
+        <div class="bg-pink-950/40 border border-pink-500/30 p-8 rounded-2xl max-w-md shadow-2xl">
+            <i data-lucide="shield-alert" class="w-16 h-16 text-pink-500 mx-auto mb-4 animate-bounce"></i>
+            <h3 class="text-xl font-bold text-white mb-2">Conținut Protejat</h3>
+            <p class="text-gray-400 text-sm">Captura de ecran sau comutarea ferestrei este dezactivată pentru protejarea drepturilor de autor.</p>
+        </div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-gray-900/90 backdrop-blur-md border-b border-gray-800 px-4 py-3">
+        <div class="max-w-2xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl font-black bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                    Pagina mea personala L@ura! 💝
+                </span>
+            </div>
+            <div id="userBadge" class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-800 text-gray-400 border border-gray-700">
+                Statut: Vizitator
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-2xl w-full mx-auto px-4 py-6 space-y-6">
+
+        <!-- Header Profil -->
+        <section class="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+            <div class="h-32 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-700 relative"></div>
+            <div class="px-6 pb-6 relative">
+                <div class="flex justify-between items-end -mt-12 mb-4">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
+                             alt="L@ura M." 
+                             class="w-24 h-24 rounded-full border-4 border-gray-900 object-cover shadow-lg">
+                        <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-gray-900 rounded-full"></span>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                        L@ura M.
+                        <i data-lucide="badge-check" class="w-5 h-5 text-pink-500 fill-pink-500/20"></i>
+                    </h1>
+                    <p class="text-sm text-pink-400 font-medium">@laura_m</p>
+                </div>
+
+                <p class="mt-3 text-sm text-gray-300 leading-relaxed">
+                    Bine ai venit pe pagina mea! Aici postez fotografii și clipuri video exclusive pe care nu le public nicăieri altundeva. Susține activitatea mea printr-o donație pentru a debloca conținutul! ✨
+                </p>
+
+                <!-- Planuri Donație -->
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <button onclick="openDonateModal('poze', 25)" class="p-3 bg-gray-800/80 hover:bg-gray-800 border border-gray-700 hover:border-pink-500/50 rounded-xl transition text-left group">
+                        <div class="text-xs text-gray-400 font-medium">Deblocare Poze</div>
+                        <div class="text-lg font-bold text-pink-400 group-hover:text-pink-300">25 LEI</div>
+                        <div class="text-[10px] text-gray-500">Acces galeriile foto</div>
+                    </button>
+
+                    <button onclick="openDonateModal('video', 50)" class="p-3 bg-gray-800/80 hover:bg-gray-800 border border-gray-700 hover:border-purple-500/50 rounded-xl transition text-left group">
+                        <div class="text-xs text-gray-400 font-medium">Deblocare Video</div>
+                        <div class="text-lg font-bold text-purple-400 group-hover:text-purple-300">50 LEI</div>
+                        <div class="text-[10px] text-gray-500">Include Poze + Clipurile Video</div>
+                    </button>
+
+                    <button onclick="openDonateModal('full', 100)" class="p-3 bg-gradient-to-r from-pink-950/60 to-purple-950/60 hover:from-pink-900/60 hover:to-purple-900/60 border border-pink-500/40 rounded-xl transition text-left group">
+                        <div class="text-xs text-pink-300 font-medium">Acces Complet VIP</div>
+                        <div class="text-lg font-bold text-white group-hover:text-pink-200">100 LEI</div>
+                        <div class="text-[10px] text-pink-400/80">Acces nelimitat la tot conținutul</div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtre Feed -->
+        <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+            <div class="flex gap-2">
+                <button onclick="filterFeed('all')" id="filter-all" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-pink-600 text-white shadow-lg">Toate</button>
+                <button onclick="filterFeed('photo')" id="filter-photo" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-800 text-gray-400 hover:bg-gray-700">Poze (25 LEI)</button>
+                <button onclick="filterFeed('video')" id="filter-video" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-800 text-gray-400 hover:bg-gray-700">Video (50 LEI)</button>
+            </div>
+        </div>
+
+        <!-- Feed Postări -->
+        <div id="postsFeed" class="space-y-6">
+            <!-- Postările sunt generate din JavaScript -->
+        </div>
+
+    </main>
+
+    <!-- Subsol (Footer) cu Termeni și Protecție -->
+    <footer class="bg-gray-900 border-t border-gray-800 mt-auto py-8 px-4 text-xs text-gray-500">
+        <div class="max-w-2xl mx-auto space-y-4 text-center">
+            
+            <div class="flex items-center justify-center space-x-2 text-pink-500 font-semibold mb-2">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                <span>Conținut Protejat & Salvat Anti-Copiere</span>
+            </div>
+
+            <p class="leading-relaxed text-gray-400">
+                © <span id="year"></span> L@ura M. Toate drepturile sunt rezervate. 
+                Copierea, distribuirea, salvarea sau retransmiterea conținutului foto/video publicat pe această pagină fără acordul prealabil scris este strict interzisă și constituie o încălcare a Legii privind dreptul de autor (Legea nr. 8/1996).
+            </p>
+
+            <div class="flex justify-center flex-wrap gap-4 pt-2 text-gray-400 font-medium">
+                <button onclick="openLegalModal('terms')" class="hover:text-pink-400 transition">Termeni și Condiții</button>
+                <span>•</span>
+                <button onclick="openLegalModal('privacy')" class="hover:text-pink-400 transition">Politica de Confidențialitate</button>
+                <span>•</span>
+                <button onclick="openLegalModal('dmca')" class="hover:text-pink-400 transition">DMCA & Copyright</button>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Modal Donație / Plată -->
+    <div id="donateModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
+            <button onclick="closeDonateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-3 text-pink-500">
+                    <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Susține-o pe L@ura M.</h3>
+                <p class="text-xs text-gray-400 mt-1">Selectează opțiunea de plată pentru deblocare instantă</p>
+            </div>
+
+            <div class="bg-gray-800/50 p-4 rounded-xl mb-6 border border-gray-700/50 flex justify-between items-center">
+                <span class="text-sm font-medium text-gray-300" id="modalPlanName">Pachet Deblocare</span>
+                <span class="text-xl font-black text-pink-400" id="modalPlanPrice">0 LEI</span>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="processSimulatedPayment()" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 font-bold rounded-xl text-white shadow-lg flex items-center justify-center gap-2 transition">
+                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                    Plătește Securizat cu Cardul
+                </button>
+                
+                <button onclick="processSimulatedPayment()" class="w-full py-3 bg-gray-800 hover:bg-gray-700 font-semibold rounded-xl text-gray-200 border border-gray-700 flex items-center justify-center gap-2 transition">
+                    <span class="text-xs font-bold text-blue-400">Revolut Pay</span> / Apple Pay
+                </button>
+            </div>
+
+            <p class="text-[10px] text-gray-500 text-center mt-4 flex items-center justify-center gap-1">
+                <i data-lucide="lock" class="w-3 h-3"></i>
+                Tranzacție securizată 256-bit SSL. Acces oferit pe loc.
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal Legal / Termeni -->
+    <div id="legalModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center pb-3 border-b border-gray-800 mb-4">
+                <h3 class="text-lg font-bold text-white" id="legalModalTitle">Termeni și Condiții</h3>
+                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="overflow-y-auto space-y-3 text-xs text-gray-300 leading-relaxed pr-2" id="legalModalContent">
+                <!-- Text generat din JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript logică pagină -->
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Stare utilizator (Simulare acces)
+        let userTier = 0; // 0: Liber, 25: Poze, 50: Video, 100: Full VIP
+        let currentSelectingPlan = { tier: 0, price: 0, name: '' };
+
+        // Date Postări
+        const posts = [
+            {
+                id: 1,
+                author: "L@ura M.",
+                tier: 25,
+                type: "photo",
+                date: "Acum 2 ore",
+                text: "O zi superbă de vară! ☀️ Am pregătit un set foto special pentru susținătorii mei.",
+                mediaUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80",
+                likes: 142
+            },
+            {
+                id: 2,
+                author: "L@ura M.",
+                tier: 50,
+                type: "video",
+                date: "Ieri",
+                text: "Un scurt clip din culisele ultimei mele ședințe foto! 🎥 sper să vă placă!",
+                mediaUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
+                likes: 289
+            },
+            {
+                id: 3,
+                author: "L@ura M.",
+                tier: 25,
+                type: "photo",
+                date: "Acum 3 zile",
+                text: "Relaxare de sfârșit de săptămână ☕💖",
+                mediaUrl: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
+                likes: 95
+            }
+        ];
+
+        // Randare feed
+        function renderFeed(filter = 'all') {
+            const feedContainer = document.getElementById('postsFeed');
+            feedContainer.innerHTML = '';
+
+            const filteredPosts = posts.filter(post => {
+                if (filter === 'photo') return post.type === 'photo';
+                if (filter === 'video') return post.type === 'video';
+                return true;
+            });
+
+            filteredPosts.forEach(post => {
+                const isUnlocked = userTier >= post.tier;
+
+                const postCard = document.createElement('article');
+                postCard.className = "bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg space-y-4 p-4";
+
+                postCard.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="w-10 h-10 rounded-full object-cover">
+                            <div>
+                                <h4 class="font-bold text-sm text-white flex items-center gap-1">${post.author} <i data-lucide="badge-check" class="w-4 h-4 text-pink-500"></i></h4>
+                                <span class="text-[11px] text-gray-500">${post.date}</span>
+                            </div>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-full font-semibold ${post.tier === 25 ? 'bg-pink-950/80 text-pink-400 border border-pink-800/50' : 'bg-purple-950/80 text-purple-400 border border-purple-800/50'}">
+                            ${post.tier === 25 ? 'Donație 25 LEI' : 'Donație 50 LEI'}
+                        </span>
+                    </div>
+
+                    <p class="text-sm text-gray-200">${post.text}</p>
+
+                    <!-- Zona media / Blocare -->
+                    <div class="relative rounded-xl overflow-hidden bg-gray-950 min-h-[300px] flex items-center justify-center">
+                        <img src="${post.mediaUrl}" class="w-full h-[380px] object-cover ${isUnlocked ? '' : 'privacy-blur'}">
+
+                        ${!isUnlocked ? `
+                            <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3">
+                                <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
+                                    <i data-lucide="lock" class="w-6 h-6"></i>
+                                </div>
+                                <h5 class="text-base font-bold text-white">Conținut Conflidențial</h5>
+                                <p class="text-xs text-gray-400 max-w-xs">Efectuează o donație de minim ${post.tier} LEI pentru a vizualiza această postare.</p>
+                                <button onclick="openDonateModal('${post.type}', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg hover:scale-105 transition">
+                                    Deblochează pentru ${post.tier} LEI
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="flex items-center justify-between text-gray-400 pt-2 border-t border-gray-800/60 text-xs">
+                        <button class="flex items-center space-x-1.5 hover:text-pink-500 transition">
+                            <i data-lucide="heart" class="w-4 h-4"></i>
+                            <span>${post.likes} Aprecieri</span>
+                        </button>
+                        <span class="flex items-center gap-1">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i>
+                            Protejat anti-salvare
+                        </span>
+                    </div>
+                `;
+
+                feedContainer.appendChild(postCard);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Filtrare Feed
+        function filterFeed(type) {
+            document.querySelectorAll('[id^="filter-"]').forEach(btn => {
+                btn.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-800 text-gray-400 hover:bg-gray-700";
+            });
+            document.getElementById(`filter-${type}`).className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-pink-600 text-white shadow-lg";
+            renderFeed(type);
+        }
+
+        // Modal Donații
+        function openDonateModal(type, price) {
+            let name = "Pachet Poze Exclusive";
+            if (price === 50) name = "Pachet Poze + Clipurile Video";
+            if (price === 100) name = "Acces Nelimitat Full VIP";
+
+            currentSelectingPlan = { tier: price, price: price, name: name };
+
+            document.getElementById('modalPlanName').textContent = name;
+            document.getElementById('modalPlanPrice').textContent = price + " LEI";
+            document.getElementById('donateModal').classList.remove('hidden');
+        }
+
+        function closeDonateModal() {
+            document.getElementById('donateModal').classList.add('hidden');
+        }
+
+        // Simulare Plată & Update Statut
+        function processSimulatedPayment() {
+            if (currentSelectingPlan.tier > userTier) {
+                userTier = currentSelectingPlan.tier;
+            }
+            
+            closeDonateModal();
+
+            // Actualizare badge statut
+            const badge = document.getElementById('userBadge');
+            if (userTier === 25) {
+                badge.textContent = "Statut: Susținător Poze";
+                badge.className = "text-xs font-semibold px-3 py-1 rounded-full bg-pink-950 text-pink-400 border border-pink-800";
+            } else if (userTier === 50) {
+                badge.textContent = "Statut: Susținător Video";
+                badge.className = "text-xs font-semibold px-3 py-1 rounded-full bg-purple-950 text-purple-400 border border-purple-800";
+            } else if (userTier >= 100) {
+                badge.textContent = "Statut: Full VIP";
+                badge.className = "text-xs font-semibold px-3 py-1 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold shadow-lg";
+            }
+
+            renderFeed();
+        }
+
+        // Modale Legale
+        function openLegalModal(type) {
+            const titleEl = document.getElementById('legalModalTitle');
+            const contentEl = document.getElementById('legalModalContent');
+
+            if (type === 'terms') {
+                titleEl.textContent = "Termeni și Condiții";
+                contentEl.innerHTML = `
+                    <p><b>1. Introducere:</b> Accesul și utilizarea acestei pagini personale reprezintă acordul dumneavoastră necondiționat față de acești termeni.</p>
+                    <p><b>2. Donații voluntare:</b> Toate plățile efectuate reprezintă o donație voluntară pentru susținerea creatorului de conținut L@ura M. Donațiile nu sunt rambursabile.</p>
+                    <p><b>3. Drepturi de autor:</b> Toate fișierele (fotografii, videoclipuri, texte) aparțin în exclusivitate creatorului L@ura M.</p>
+                `;
+            } else if (type === 'privacy') {
+                titleEl.textContent = "Politica de Confidențialitate";
+                contentEl.innerHTML = `
+                    <p>Respectăm confidențialitatea datelor dumneavoastră. Datele de plată sunt procesate direct prin intermediul procesatorilor securizați și nu sunt stocate pe serverele noastre.</p>
+                `;
+            } else if (type === 'dmca') {
+                titleEl.textContent = "DMCA & Drepturi de Autor";
+                contentEl.innerHTML = `
+                    <p>Este strict interzisă copierea, înregistrarea ecranului, distribuirea pe alte rețele sau salvarea materialelor publicate. Orice încălcare va fi raportată autorităților competente conform Legii 8/1996.</p>
+                `;
+            }
+
+            document.getElementById('legalModal').classList.remove('hidden');
+        }
+
+        function closeLegalModal() {
+            document.getElementById('legalModal').classList.add('hidden');
+        }
+
+        // --- SISTEM DE SECURITATE ANTI-SCREENSHOT ȘI COPIERE ---
+
+        // Blocare Click Dreapta
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Blocare Scurtături de la Tastatură
+        document.addEventListener('keydown', e => {
+            if (
+                e.key === 'PrintScreen' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+                (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S' || e.key === 'p' || e.key === 'P')) ||
+                e.key === 'F12'
+            ) {
+                e.preventDefault();
+                showPrivacyShield();
+            }
+        });
+
+        // Activare Privacy Shield când fereastra își pierde focus-ul (ex: Snipping Tool deschis)
+        const privacyShield = document.getElementById('privacyShield');
+
+        function showPrivacyShield() {
+            privacyShield.classList.remove('hidden');
+            privacyShield.classList.add('flex');
+            setTimeout(() => {
+                privacyShield.classList.add('hidden');
+                privacyShield.classList.remove('flex');
+            }, 2500);
+        }
+
+        window.addEventListener('blur', () => {
+            privacyShield.classList.remove('hidden');
+            privacyShield.classList.add('flex');
+        });
+
+        window.addEventListener('focus', () => {
+            privacyShield.classList.add('hidden');
+            privacyShield.classList.remove('flex');
+        });
+
+        // Inițializare pagină
+        lucide.createIcons();
+        renderFeed();
+    </script>
+</body>
+</html>
