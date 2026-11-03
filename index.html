@@ -59,8 +59,10 @@
                     Pagina mea personala L@ura! 💝
                 </span>
             </div>
-            <div id="userBadge" class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-800 text-gray-400 border border-gray-700">
-                Statut: Vizitator
+            <!-- Statut Online în Bara de Sus -->
+            <div id="userBadge" class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-800 text-gray-300 border border-gray-700 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                <span id="badgeStatusText">Pagina Online</span>
             </div>
         </div>
     </header>
@@ -73,10 +75,10 @@
             <div class="h-32 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-700 relative"></div>
             <div class="px-6 pb-6 relative">
                 <div class="flex justify-between items-end -mt-12 mb-4">
-                    <div class="relative">
+                    <div class="relative cursor-pointer" onclick="handleSecretUnlock()">
                         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" 
                              alt="L@ura M." 
-                             class="w-24 h-24 rounded-full border-4 border-gray-900 object-cover shadow-lg">
+                             class="w-24 h-24 rounded-full border-4 border-gray-900 object-cover shadow-lg hover:opacity-90 transition">
                         <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-gray-900 rounded-full"></span>
                     </div>
                 </div>
@@ -90,7 +92,7 @@
                 </div>
 
                 <p class="mt-3 text-sm text-gray-300 leading-relaxed">
-                    Bine ai venit pe pagina mea! Aici postez fotografii și clipuri video exclusive. Unele postări sunt complet gratuite, iar altele necesită o susținere prin donație! ✨
+                    Bine ai venit pe pagina mea! Aici postez fotografii și clipuri video exclusive. Lasă o apreciere, un comentariu sau deblochează conținutul! ✨
                 </p>
 
                 <!-- Planuri Donație Aircash -->
@@ -131,6 +133,14 @@
         </div>
 
     </main>
+
+    <!-- Modal Fullscreen pentru Mărire Poze -->
+    <div id="imageModal" class="fixed inset-0 bg-black/95 z-[99999] hidden items-center justify-center p-4">
+        <button onclick="closeImageModal()" class="absolute top-5 right-5 text-gray-300 hover:text-white bg-gray-800/80 p-2 rounded-full transition">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <img id="fullscreenImg" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl">
+    </div>
 
     <!-- Subsol (Footer) cu Termeni și Protecție -->
     <footer class="bg-gray-900 border-t border-gray-800 mt-auto py-8 px-4 text-xs text-gray-500">
@@ -208,42 +218,82 @@
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Stare utilizator (Simulare acces)
-        let userTier = 0; // 0: Vizitator simplu
+        let userTier = 0; // 0: Vizitator simplu, 100: VIP complet
 
-        // Date Postări (tier: 0 înseamnă gratuit/la liber)
+        // Date Postări (cu comentarii și aprecieri incluse)
         const posts = [
             {
                 id: 1,
                 author: "L@ura M.",
-                tier: 0, // Gratuit la liber
+                tier: 0,
                 type: "photo",
                 date: "Astăzi",
-                text: "Un set foto complet gratuit pentru vizitatorii mei! 🌸 Sper să vă placă.",
+                text: "Un set foto complet gratuit pentru vizitatorii mei! 🌸 Dă click pe poză pentru a o mări.",
                 mediaUrl: "https://i.postimg.cc/mD3J4J4Y/download.jpg",
-                likes: 310
+                likes: 310,
+                likedByMe: false,
+                comments: [
+                    { user: "Mihai V.", text: "Superbă poză! Mulțumim frumos! ❤️" },
+                    { user: "Andrei S.", text: "Foarte tare pagina!" }
+                ]
             },
             {
                 id: 2,
                 author: "L@ura M.",
-                tier: 25, // Necesită deblocare 25 LEI
+                tier: 25,
                 type: "photo",
                 date: "Acum 2 ore",
                 text: "O zi superbă de vară! ☀️ Set foto exclusiv.",
                 mediaUrl: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=800&q=80",
-                likes: 142
+                likes: 142,
+                likedByMe: false,
+                comments: [
+                    { user: "Alex D.", text: "Merită fiecare leu pachetul ăsta! 🔥" }
+                ]
             },
             {
                 id: 3,
                 author: "L@ura M.",
-                tier: 50, // Necesită deblocare video 50 LEI
+                tier: 50,
                 type: "video",
                 date: "Ieri",
                 text: "Un scurt clip din culise! 🎥",
                 mediaUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80",
-                likes: 289
+                likes: 289,
+                likedByMe: false,
+                comments: []
             }
         ];
+
+        // --- DEBLOCARE SECRETĂ (5 CLICK-URI PE POZA DE PROFIL) ---
+        let profileClickCount = 0;
+        let profileClickTimer = null;
+
+        function handleSecretUnlock() {
+            profileClickCount++;
+            
+            if (profileClickTimer) clearTimeout(profileClickTimer);
+            
+            profileClickTimer = setTimeout(() => {
+                profileClickCount = 0;
+            }, 2000); // Resetează contorul dacă nu apeși repede în 2 secunde
+
+            if (profileClickCount >= 5) {
+                profileClickCount = 0;
+                clearTimeout(profileClickTimer);
+                
+                // Comută starea: Dacă era blocat, deblochează la 100, altfel resetează la 0
+                if (userTier === 0) {
+                    userTier = 100;
+                    document.getElementById('badgeStatusText').textContent = "Mod Admin / VIP";
+                } else {
+                    userTier = 0;
+                    document.getElementById('badgeStatusText').textContent = "Pagina Online";
+                }
+                
+                renderFeed();
+            }
+        }
 
         // Randare feed
         function renderFeed(filter = 'all') {
@@ -257,7 +307,6 @@
             });
 
             filteredPosts.forEach(post => {
-                // Dacă tier este 0, postarea este automat deblocată (gratuită)
                 const isUnlocked = post.tier === 0 || userTier >= post.tier;
 
                 const postCard = document.createElement('article');
@@ -277,6 +326,13 @@
                     badgeClass = 'bg-purple-950/80 text-purple-400 border border-purple-800/50';
                 }
 
+                // Generare listă comentarii
+                let commentsHTML = post.comments.map(c => `
+                    <div class="bg-gray-950/60 p-2.5 rounded-xl border border-gray-800/80 text-xs">
+                        <span class="font-bold text-pink-400">${c.user}:</span> <span class="text-gray-300">${c.text}</span>
+                    </div>
+                `).join('');
+
                 postCard.innerHTML = `
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
@@ -293,9 +349,11 @@
 
                     <p class="text-sm text-gray-200">${post.text}</p>
 
-                    <!-- Zona media / Blocare -->
+                    <!-- Zona media / Blocare sau Fullscreen -->
                     <div class="relative rounded-xl overflow-hidden bg-gray-950 min-h-[300px] flex items-center justify-center">
-                        <img src="${post.mediaUrl}" class="w-full h-[380px] object-cover ${isUnlocked ? '' : 'privacy-blur'}">
+                        <img src="${post.mediaUrl}" 
+                             class="w-full h-[380px] object-cover ${isUnlocked ? 'cursor-pointer hover:scale-105 transition duration-300' : 'privacy-blur'}"
+                             ${isUnlocked ? `onclick="openImageModal('${post.mediaUrl}')"` : ''}>
 
                         ${!isUnlocked ? `
                             <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3">
@@ -308,18 +366,38 @@
                                     Plătește prin Aircash (${post.tier} LEI)
                                 </button>
                             </div>
-                        ` : ''}
+                        ` : `
+                            <div class="absolute bottom-3 right-3 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg text-[11px] text-white flex items-center gap-1.5 pointer-events-none">
+                                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i> Click pentru mărire
+                            </div>
+                        `}
                     </div>
 
-                    <div class="flex items-center justify-between text-gray-400 pt-2 border-t border-gray-800/60 text-xs">
-                        <button class="flex items-center space-x-1.5 hover:text-pink-500 transition">
-                            <i data-lucide="heart" class="w-4 h-4"></i>
-                            <span>${post.likes} Aprecieri</span>
-                        </button>
-                        <span class="flex items-center gap-1">
-                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i>
-                            Protejat anti-salvare
-                        </span>
+                    <!-- Butoane Aprecieri și Secțiune Comentarii -->
+                    <div class="space-y-3 pt-2 border-t border-gray-800/60 text-xs">
+                        <div class="flex items-center justify-between text-gray-400">
+                            <button onclick="toggleLike(${post.id})" class="flex items-center space-x-1.5 hover:text-pink-500 transition group">
+                                <i data-lucide="heart" class="w-4 h-4 ${post.likedByMe ? 'fill-pink-500 text-pink-500' : ''} group-hover:scale-110 transition"></i>
+                                <span class="${post.likedByMe ? 'text-pink-400 font-bold' : ''}">${post.likes} Aprecieri</span>
+                            </button>
+                            <span class="flex items-center gap-1 text-emerald-400">
+                                <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Protejat
+                            </span>
+                        </div>
+
+                        <!-- Lista Comentarii -->
+                        <div class="space-y-2 max-h-32 overflow-y-auto">
+                            ${commentsHTML}
+                        </div>
+
+                        <!-- Adaugă Comentariu Nou -->
+                        <form onsubmit="addComment(event, ${post.id})" class="flex gap-2 pt-1">
+                            <input type="text" id="comment-input-${post.id}" placeholder="Scrie un comentariu..." required
+                                   class="flex-grow bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-pink-500">
+                            <button type="submit" class="px-4 py-2 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl transition">
+                                Trimite
+                            </button>
+                        </form>
                     </div>
                 `;
 
@@ -327,6 +405,50 @@
             });
 
             lucide.createIcons();
+        }
+
+        // Funcție Aprecieri (Like)
+        function toggleLike(postId) {
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                if (post.likedByMe) {
+                    post.likes -= 1;
+                    post.likedByMe = false;
+                } else {
+                    post.likes += 1;
+                    post.likedByMe = true;
+                }
+                renderFeed(document.querySelector('.bg-pink-600')?.id?.replace('filter-', '') || 'all');
+            }
+        }
+
+        // Funcție Adăugare Comentariu
+        function addComment(event, postId) {
+            event.preventDefault();
+            const input = document.getElementById(`comment-input-${postId}`);
+            const text = input.value.trim();
+            if (text) {
+                const post = posts.find(p => p.id === postId);
+                if (post) {
+                    post.comments.push({ user: "Vizitator", text: text });
+                    input.value = '';
+                    renderFeed();
+                }
+            }
+        }
+
+        // Funcții Modal Fullscreen Poză
+        function openImageModal(url) {
+            document.getElementById('fullscreenImg').src = url;
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
 
         // Filtrare Feed
@@ -385,11 +507,8 @@
         }
 
         // --- SISTEM DE SECURITATE ANTI-SCREENSHOT ȘI COPIERE ---
-
-        // Blocare Click Dreapta
         document.addEventListener('contextmenu', e => e.preventDefault());
 
-        // Blocare Scurtături de la Tastatură
         document.addEventListener('keydown', e => {
             if (
                 e.key === 'PrintScreen' ||
@@ -402,7 +521,6 @@
             }
         });
 
-        // Activare Privacy Shield când fereastra își pierde focus-ul (ex: Snipping Tool deschis)
         const privacyShield = document.getElementById('privacyShield');
 
         function showPrivacyShield() {
