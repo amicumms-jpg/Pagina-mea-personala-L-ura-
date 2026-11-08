@@ -157,7 +157,7 @@
 
     </main>
 
-    <!-- Modal Fullscreen pentru Mărire Poze -->
+    <!-- Modal Fullscreen pentru Mărire Poză -->
     <div id="imageModal" class="fixed inset-0 bg-black/95 z-[99999] hidden items-center justify-center p-4" onclick="closeImageModal()">
         <button onclick="closeImageModal()" class="absolute top-5 right-5 text-gray-300 hover:text-white bg-gray-800/80 p-3 rounded-full transition z-10">
             <i data-lucide="x" class="w-6 h-6"></i>
@@ -240,7 +240,7 @@
                 <p class="text-xs text-gray-400">Îți voi trimite datele necesare pentru plata prin Zen Pay, Revolut sau transfer imediat ce scrii pe chat.</p>
             </div>
 
-            <button onclick="closeOtherPaymentModal(); if(typeof Tawk_API !== 'undefined') Tawk_API.toggle();" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 font-bold rounded-xl text-white shadow-lg transition mb-3">
+            <button onclick="closeOtherPaymentModal(); if(typeof Tawk_API !== 'undefined') Tawk_API.toggle();" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-pink-500 font-bold rounded-xl text-white shadow-lg transition mb-3">
                 Deschide chat-ul pentru detalii ➔
             </button>
         </div>
@@ -267,7 +267,7 @@
 
         let userTier = 0; // 0: Vizitator simplu, 100: VIP complet
 
-        // Date Postări
+        // Date Postări (Inclusiv noua postare video de 50 LEI)
         const posts = [
             {
                 id: 1,
@@ -294,7 +294,7 @@
                 author: "L@ura M.",
                 tier: 25,
                 type: "photo",
-                date: "Acum 40 minute",
+                date: "Acum o oră",
                 text: "Set nou foto exclusiv! 🤫 Deblochează galeria completă de 4 poze.",
                 mediaUrls: [
                     "IMG_20261108_170020_364.jpg",
@@ -313,14 +313,30 @@
                 author: "L@ura M.",
                 tier: 50,
                 type: "video",
-                date: "Acum câteva minute",
-                text: "Pachetul meu video exclusiv! 🎥 Conține 3 clipuri HD cu sunet.",
+                date: "Ieri",
+                text: "Pachetul meu video exclusiv nr. 1! 🎥 Conține 3 clipuri HD.",
                 videoUrls: [
                     "VID_20261108_065955_665.mp4",
                     "VID_20261108_065959_666.mp4",
                     "VID_20261108_070005_659.mp4"
                 ],
                 likes: 310,
+                likedByMe: false,
+                comments: []
+            },
+            {
+                id: 4,
+                author: "L@ura M.",
+                tier: 50,
+                type: "video",
+                date: "Acum câteva minute",
+                text: "Pachet nou video exclusiv nr. 2! 🎬 Conține alte 3 clipuri noi.",
+                videoUrls: [
+                    "VID_20261108_070010_368.mp4",
+                    "VID_20261108_070015_091.mp4",
+                    "VID_20261108_070027_946.mp4"
+                ],
+                likes: 142,
                 likedByMe: false,
                 comments: []
             }
