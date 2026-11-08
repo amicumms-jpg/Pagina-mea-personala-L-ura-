@@ -240,7 +240,7 @@
                 <p class="text-xs text-gray-400">Îți voi trimite datele necesare pentru plata prin Zen Pay, Revolut sau transfer imediat ce scrii pe chat.</p>
             </div>
 
-            <button onclick="closeOtherPaymentModal(); if(typeof Tawk_API !== 'undefined') Tawk_API.toggle();" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-pink-500 font-bold rounded-xl text-white shadow-lg transition mb-3">
+            <button onclick="closeOtherPaymentModal(); if(typeof Tawk_API !== 'undefined') Tawk_API.toggle();" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 font-bold rounded-xl text-white shadow-lg transition mb-3">
                 Deschide chat-ul pentru detalii ➔
             </button>
         </div>
@@ -267,7 +267,7 @@
 
         let userTier = 0; // 0: Vizitator simplu, 100: VIP complet
 
-        // Date Postări (Toate cele 5 poze mutate în prima postare ca set/calup)
+        // Date Postări
         const posts = [
             {
                 id: 1,
@@ -275,7 +275,7 @@
                 tier: 0,
                 type: "photo",
                 date: "Astăzi",
-                text: "Set complet de fotografii exclusive pentru vizitatorii mei! 🌸📸",
+                text: "Set foto gratuit pentru vizitatorii mei! 🌸📸",
                 mediaUrls: [
                     "IMG_20261108_165926_533.jpg",
                     "IMG_20261108_165928_976.jpg",
@@ -286,12 +286,30 @@
                 likes: 420,
                 likedByMe: false,
                 comments: [
-                    { user: "Mihai V.", text: "Superb calupul de poze! Mulțumim! ❤️" },
-                    { user: "Andrei S.", text: "Foarte tare colecția!" }
+                    { user: "Mihai V.", text: "Superb calupul de poze! Mulțumim! ❤️" }
                 ]
             },
             {
                 id: 2,
+                author: "L@ura M.",
+                tier: 25,
+                type: "photo",
+                date: "Acum 10 minute",
+                text: "Set nou foto exclusiv! 🤫 Deblochează galeria completă de 4 poze.",
+                mediaUrls: [
+                    "IMG_20261108_170020_364.jpg",
+                    "IMG_20261108_170024_080.jpg",
+                    "IMG_20261108_170033_052.jpg",
+                    "IMG_20261108_170036_510.jpg"
+                ],
+                likes: 185,
+                likedByMe: false,
+                comments: [
+                    { user: "Alex D.", text: "Abia aștept să le deblochez pe toate! 🔥" }
+                ]
+            },
+            {
+                id: 3,
                 author: "L@ura M.",
                 tier: 50,
                 type: "video",
@@ -418,20 +436,36 @@
                         </div>
                     `;
                 } else if (post.mediaUrls) {
-                    // Galerie / Calup de poze
-                    let gridCols = post.mediaUrls.length === 1 ? 'grid-cols-1' : post.mediaUrls.length === 2 ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-3';
-                    let imagesHTML = post.mediaUrls.map((url, idx) => `
-                        <div class="relative group cursor-pointer overflow-hidden rounded-xl bg-gray-950 h-44" onclick="openImageModal('${url}')">
-                            <img src="${url}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                                <span class="bg-black/60 text-white p-1.5 rounded-full"><i data-lucide="maximize-2" class="w-4 h-4"></i></span>
-                            </div>
+                    let gridCols = post.mediaUrls.length === 1 ? 'grid-cols-1' : 'grid-cols-2';
+                    let imagesHTML = post.mediaUrls.map((url) => `
+                        <div class="relative group cursor-pointer overflow-hidden rounded-xl bg-gray-950 h-44" onclick="${isUnlocked ? `openImageModal('${url}')` : `openDonateModal('Pachet ${post.tier} LEI', ${post.tier})`}">
+                            <img src="${url}" class="w-full h-full object-cover ${isUnlocked ? 'group-hover:scale-105' : 'filter blur-2xl opacity-30'} transition duration-300">
+                            ${isUnlocked ? `
+                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                    <span class="bg-black/60 text-white p-1.5 rounded-full"><i data-lucide="maximize-2" class="w-4 h-4"></i></span>
+                                </div>
+                            ` : ''}
                         </div>
                     `).join('');
 
                     mediaContent = `
-                        <div class="grid ${gridCols} gap-2 rounded-xl overflow-hidden">
-                            ${imagesHTML}
+                        <div class="relative rounded-xl overflow-hidden">
+                            <div class="grid ${gridCols} gap-2 rounded-xl overflow-hidden">
+                                ${imagesHTML}
+                            </div>
+
+                            ${!isUnlocked ? `
+                                <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3 z-10 rounded-xl">
+                                    <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
+                                        <i data-lucide="lock" class="w-6 h-6"></i>
+                                    </div>
+                                    <h5 class="text-base font-bold text-white">Galerie Exclusivă (${post.mediaUrls.length} Poze)</h5>
+                                    <p class="text-xs text-gray-400 max-w-xs">Efectuează o donație de minim ${post.tier} LEI pentru a vizualiza această galerie completă.</p>
+                                    <button onclick="openDonateModal('Deblocare Poze', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 transition">
+                                        Deblochează Galeria (${post.tier} LEI)
+                                    </button>
+                                </div>
+                            ` : ''}
                         </div>
                     `;
                 }
