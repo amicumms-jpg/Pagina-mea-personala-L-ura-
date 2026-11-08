@@ -49,10 +49,17 @@
 
         <!-- Header Profil -->
         <section class="bg-gray-900 rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
-            <div class="h-32 bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-700 relative"></div>
+            <!-- Poza de Copertă în Partea de Sus a Profilului -->
+            <div class="h-44 w-full bg-gray-950 overflow-hidden relative">
+                <img src="IMG_20261108_165926_533.jpg" 
+                     alt="Copertă Profil L@ura M." 
+                     class="w-full h-full object-cover opacity-90 hover:opacity-100 transition duration-300">
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-900/90"></div>
+            </div>
+
             <div class="px-6 pb-6 relative">
                 <div class="flex justify-between items-end -mt-12 mb-4">
-                    <div class="relative cursor-pointer" onclick="handleSecretUnlock()" title="Apasă de 5 ori pentru deblocare VIP">
+                    <div class="relative cursor-pointer z-10" onclick="handleSecretUnlock()" title="Apasă de 5 ori pentru deblocare VIP">
                         <img src="https://i.postimg.cc/MpVD31KR/IMG-20261103-210638-366.jpg" 
                              alt="L@ura M." 
                              class="w-24 h-24 rounded-full border-4 border-gray-900 object-cover shadow-lg active:opacity-80 transition">
@@ -260,7 +267,7 @@
 
         let userTier = 0; // 0: Vizitator simplu, 100: VIP complet
 
-        // Date Postări (Contoarele de mai sus se actualizează automat în funcție de aceste postări)
+        // Date Postări
         const posts = [
             {
                 id: 1,
@@ -316,7 +323,6 @@
             document.getElementById('counterVideos').textContent = videoCount;
             document.getElementById('counterLocked').textContent = lockedCount;
             
-            // Formatare scurtă pentru like-uri dacă trec de 1000 (ex: 1.2K)
             if (totalLikes >= 1000) {
                 document.getElementById('counterLikes').textContent = (totalLikes / 1000).toFixed(1) + 'K';
             } else {
