@@ -294,7 +294,7 @@
                 author: "L@ura M.",
                 tier: 25,
                 type: "photo",
-                date: "Acum 10 minute",
+                date: "Acum 40 minute",
                 text: "Set nou foto exclusiv! 🤫 Deblochează galeria completă de 4 poze.",
                 mediaUrls: [
                     "IMG_20261108_170020_364.jpg",
@@ -313,10 +313,14 @@
                 author: "L@ura M.",
                 tier: 50,
                 type: "video",
-                date: "Ieri",
-                text: "Noul meu videoclip exclusiv! 🎥",
-                mediaUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-                likes: 289,
+                date: "Acum câteva minute",
+                text: "Pachetul meu video exclusiv! 🎥 Conține 3 clipuri HD cu sunet.",
+                videoUrls: [
+                    "VID_20261108_065955_665.mp4",
+                    "VID_20261108_065959_666.mp4",
+                    "VID_20261108_070005_659.mp4"
+                ],
+                likes: 310,
                 likedByMe: false,
                 comments: []
             }
@@ -325,16 +329,20 @@
         // Funcție pentru actualizarea automată a contoarelor reale din header
         function updateCounters() {
             let totalPhotos = 0;
+            let totalVideos = 0;
             posts.forEach(p => {
                 if (p.mediaUrls) totalPhotos += p.mediaUrls.length;
                 else if (p.type === 'photo') totalPhotos += 1;
+
+                if (p.videoUrls) totalVideos += p.videoUrls.length;
+                else if (p.type === 'video') totalVideos += 1;
             });
-            const videoCount = posts.filter(p => p.type === 'video').length;
+
             const lockedCount = posts.filter(p => p.tier > 0).length;
             const totalLikes = posts.reduce((sum, p) => sum + p.likes, 0);
 
             document.getElementById('counterPhotos').textContent = totalPhotos;
-            document.getElementById('counterVideos').textContent = videoCount;
+            document.getElementById('counterVideos').textContent = totalVideos;
             document.getElementById('counterLocked').textContent = lockedCount;
             
             if (totalLikes >= 1000) {
@@ -412,27 +420,34 @@
                 `).join('');
 
                 let mediaContent = '';
-                if (post.type === 'video') {
+                if (post.type === 'video' && post.videoUrls) {
+                    let videosHTML = post.videoUrls.map(vUrl => `
+                        <div class="rounded-xl overflow-hidden bg-gray-950 h-[360px] flex items-center justify-center">
+                            <video src="${vUrl}" controls class="w-full h-full object-cover"></video>
+                        </div>
+                    `).join('');
+
                     mediaContent = `
-                        <div class="relative rounded-xl overflow-hidden bg-gray-950 h-[380px] flex items-center justify-center">
+                        <div class="relative rounded-xl overflow-hidden">
                             ${isUnlocked ? `
-                                <video src="${post.mediaUrl}" controls class="w-full h-full object-cover"></video>
-                            ` : `
-                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover filter blur-2xl opacity-20">
-                            `}
-                            
-                            ${!isUnlocked ? `
-                                <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3 z-10">
-                                    <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
-                                        <i data-lucide="lock" class="w-6 h-6"></i>
-                                    </div>
-                                    <h5 class="text-base font-bold text-white">Clip Video Confidențial</h5>
-                                    <p class="text-xs text-gray-400 max-w-xs">Efectuează o donație de minim ${post.tier} LEI pentru a debloca acest videoclip.</p>
-                                    <button onclick="openDonateModal('Pachet ${post.tier} LEI', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 transition">
-                                        Plătește prin Aircash (${post.tier} LEI)
-                                    </button>
+                                <div class="space-y-3">
+                                    ${videosHTML}
                                 </div>
-                            ` : ''}
+                            ` : `
+                                <div class="relative rounded-xl overflow-hidden bg-gray-950 h-[380px]">
+                                    <img src="IMG_20261108_165926_533.jpg" class="w-full h-full object-cover filter blur-2xl opacity-20">
+                                    <div class="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center space-y-3 z-10 rounded-xl">
+                                        <div class="w-12 h-12 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
+                                            <i data-lucide="lock" class="w-6 h-6"></i>
+                                        </div>
+                                        <h5 class="text-base font-bold text-white">Pachet Video Confidențial (${post.videoUrls.length} Clipuri)</h5>
+                                        <p class="text-xs text-gray-400 max-w-xs">Efectuează o donație de minim ${post.tier} LEI pentru a debloca toate videoclipurile.</p>
+                                        <button onclick="openDonateModal('Pachet Video', ${post.tier})" class="px-5 py-2.5 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 transition">
+                                            Deblochează Clipurile Video (${post.tier} LEI)
+                                        </button>
+                                    </div>
+                                </div>
+                            `}
                         </div>
                     `;
                 } else if (post.mediaUrls) {
