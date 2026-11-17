@@ -273,9 +273,10 @@
         document.getElementById('year').textContent = new Date().getFullYear();
 
         let isAdminVIP = false;
-        let unlockedPostsMap = {}; // Reține pachetele individuale deblocate
+        let unlockedPostsMap = {}; 
+        let vipExpiryTime = null;
 
-        // --- CODURI UNICE PE FIECARE POSTARE ȘI CODURI VIP MASTER ---
+        // --- LISTA CODURILOR (UNICE PE FIECARE POSTARE + VIP MASTER) ---
         const packageCodes = {
             // Postarea #2 (Galerie Foto 25 LEI)
             "P2-POZE-01": 2, "P2-POZE-02": 2, "P2-POZE-03": 2, "P2-POZE-04": 2, "P2-POZE-05": 2,
@@ -297,25 +298,26 @@
 
         function loadSavedUnlocks() {
             const now = new Date().getTime();
+            
+            // Încărcare pachete individuale
             const savedData = JSON.parse(localStorage.getItem('laura_unlocked_packages') || '{}');
             const cleanData = {};
-
             for (const key in savedData) {
-                if (now < savedData[key]) {
-                    cleanData[key] = savedData[key];
-                }
+                if (now < savedData[key]) cleanData[key] = savedData[key];
             }
-
             unlockedPostsMap = cleanData;
             localStorage.setItem('laura_unlocked_packages', JSON.stringify(cleanData));
 
-            if (unlockedPostsMap["ALL"]) {
+            // Încărcare VIP general
+            const savedVIP = localStorage.getItem('laura_vip_expiry');
+            if (savedVIP && now < parseInt(savedVIP)) {
+                vipExpiryTime = parseInt(savedVIP);
+            } else {
+                localStorage.removeItem('laura_vip_expiry');
+            }
+
+            if (vipExpiryTime || unlockedPostsMap["ALL"]) {
                 document.getElementById('badgeStatusText').textContent = "Acces VIP Activ (48h)";
-                const msgEl = document.getElementById('vipFeedbackMsg');
-                if (msgEl) {
-                    msgEl.textContent = "✓ Licență VIP activă pe acest dispozitiv.";
-                    msgEl.className = "text-xs text-emerald-400 mt-2.5 font-medium";
-                }
             } else if (Object.keys(unlockedPostsMap).length > 0) {
                 document.getElementById('badgeStatusText').textContent = "Pachete Active (48h)";
             }
@@ -330,9 +332,9 @@
             const enteredCode = inputEl.value.trim().toUpperCase();
 
             if (packageCodes[enteredCode] === "ALL") {
-                const expiry = new Date().getTime() + (48 * 60 * 60 * 1000); // 48 ore
-                unlockedPostsMap["ALL"] = expiry;
-                localStorage.setItem('laura_unlocked_packages', JSON.stringify(unlockedPostsMap));
+                const expiry = new Date().getTime() + (48 * 60 * 60 * 1000); 
+                localStorage.setItem('laura_vip_expiry', expiry.toString());
+                vipExpiryTime = expiry;
 
                 document.getElementById('badgeStatusText').textContent = "Acces VIP Activ (48h)";
                 msgEl.textContent = "✓ Cod VIP activat cu succes! Tot conținutul este deblocat.";
@@ -356,15 +358,11 @@
             const target = packageCodes[enteredCode];
 
             if (target === postId || target === "ALL") {
-                const expiryTime = new Date().getTime() + (48 * 60 * 60 * 1000); // 48 ore
+                const expiryTime = new Date().getTime() + (48 * 60 * 60 * 1000); 
                 unlockedPostsMap[target] = expiryTime;
                 localStorage.setItem('laura_unlocked_packages', JSON.stringify(unlockedPostsMap));
 
-                if (target === "ALL") {
-                    document.getElementById('badgeStatusText').textContent = "Acces VIP Activ (48h)";
-                } else {
-                    document.getElementById('badgeStatusText').textContent = "Pachete Active (48h)";
-                }
+                document.getElementById('badgeStatusText').textContent = "Pachete Active (48h)";
 
                 renderFeed(document.querySelector('.bg-pink-600')?.id?.replace('filter-', '') || 'all');
             } else if (target !== undefined) {
@@ -505,7 +503,6 @@
                 renderFeed();
             }
         }
-        let isAdminVIP = false;
 
         function renderFeed(filter = 'all') {
             updateCounters();
@@ -519,7 +516,8 @@
             });
 
             filteredPosts.forEach(post => {
-                const isUnlocked = post.price === 0 || isAdminVIP || Boolean(unlockedPostsMap["ALL"]) || Boolean(unlockedPostsMap[post.id]);
+                const isVIPActive = (vipExpiryTime && new Date().getTime() < vipExpiryTime) || isAdminVIP || Boolean(unlockedPostsMap["ALL"]);
+                const isUnlocked = post.price === 0 || isVIPActive || Boolean(unlockedPostsMap[post.id]);
 
                 const postCard = document.createElement('article');
                 postCard.className = "bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg space-y-4 p-4";
@@ -535,7 +533,6 @@
                     </div>
                 `).join('');
 
-                // Căsuța de activare cod direct pe pachetul blocat
                 const inlineUnlockBox = !isUnlocked ? `
                     <div class="w-full max-w-xs pt-2 border-t border-white/10 mt-1">
                         <div class="flex gap-1.5">
