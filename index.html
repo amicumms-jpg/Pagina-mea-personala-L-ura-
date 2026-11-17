@@ -142,11 +142,11 @@
                     </button>
                 </div>
 
-                <!-- Chenar Exclusiv pentru Codul VIP -->
+                <!-- Chenar Exclusiv pentru Codul VIP General -->
                 <div class="mt-4 bg-gray-950/90 border border-amber-500/40 rounded-2xl p-4 shadow-inner">
                     <div class="flex items-center gap-2 mb-3">
                         <i data-lucide="key-round" class="w-4 h-4 text-amber-400"></i>
-                        <span class="text-sm font-bold text-white">Ai primit o cheie VIP de activare?</span>
+                        <span class="text-sm font-bold text-white">Ai primit o cheie VIP generală de activare?</span>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <input type="text" id="vipKeyInput" placeholder="LAURA-VIP-100-XX" 
@@ -247,7 +247,7 @@
             <p class="text-xs text-gray-400 mb-4">Zen Pay / Revolut / Transfer Bancar</p>
             <div class="bg-gray-800/50 p-4 rounded-xl mb-5 border border-gray-700/50 text-center">
                 <p class="text-sm font-semibold text-pink-300 mb-1">Scrie pe chat pentru mai multe informații și detalii de plată!</p>
-                <p class="text-xs text-gray-400">Îți voi trimite datele necesare și codul VIP imediat ce scrii pe chat.</p>
+                <p class="text-xs text-gray-400">Îți voi trimite datele necesare și codul de activare imediat ce scrii pe chat.</p>
             </div>
             <button onclick="closeOtherPaymentModal(); if(typeof Tawk_API !== 'undefined') Tawk_API.toggle();" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-pink-500 font-bold rounded-xl text-white shadow-lg transition mb-3">
                 Deschide chat-ul pentru detalii ➔
@@ -273,30 +273,55 @@
         document.getElementById('year').textContent = new Date().getFullYear();
 
         let isAdminVIP = false;
-        let vipExpiryTime = null;
+        let unlockedPostsMap = {}; // Reține pachetele individuale deblocate
 
-        // --- CODURI VIP MASTER (Deblochează tot conținutul pentru 48 ore) ---
-        const validVipKeys = {
-            "LAURA-VIP-100-01": true,
-            "LAURA-VIP-100-02": true,
-            "LAURA-VIP-100-03": true
+        // --- CODURI UNICE PE FIECARE POSTARE ȘI CODURI VIP MASTER ---
+        const packageCodes = {
+            // Postarea #2 (Galerie Foto 25 LEI)
+            "P2-POZE-01": 2, "P2-POZE-02": 2, "P2-POZE-03": 2, "P2-POZE-04": 2, "P2-POZE-05": 2,
+
+            // Postarea #3 (Pachet Video 1 - 50 LEI)
+            "P3-VID1-01": 3, "P3-VID1-02": 3, "P3-VID1-03": 3, "P3-VID1-04": 3, "P3-VID1-05": 3,
+
+            // Postarea #4 (Pachet Video 2 - 50 LEI)
+            "P4-VID2-01": 4, "P4-VID2-02": 4, "P4-VID2-03": 4, "P4-VID2-04": 4, "P4-VID2-05": 4,
+
+            // Postarea #5 (Pachet Video 3 - 50 LEI)
+            "P5-VID3-01": 5, "P5-VID3-02": 5, "P5-VID3-03": 5, "P5-VID3-04": 5, "P5-VID3-05": 5,
+
+            // Coduri VIP Master (Deblochează TOT)
+            "LAURA-VIP-100-01": "ALL",
+            "LAURA-VIP-100-02": "ALL",
+            "LAURA-VIP-100-03": "ALL"
         };
 
-        function loadSavedVIP() {
-            const savedExpiry = localStorage.getItem('laura_vip_expiry');
-            if (savedExpiry && new Date().getTime() < parseInt(savedExpiry)) {
-                vipExpiryTime = parseInt(savedExpiry);
+        function loadSavedUnlocks() {
+            const now = new Date().getTime();
+            const savedData = JSON.parse(localStorage.getItem('laura_unlocked_packages') || '{}');
+            const cleanData = {};
+
+            for (const key in savedData) {
+                if (now < savedData[key]) {
+                    cleanData[key] = savedData[key];
+                }
+            }
+
+            unlockedPostsMap = cleanData;
+            localStorage.setItem('laura_unlocked_packages', JSON.stringify(cleanData));
+
+            if (unlockedPostsMap["ALL"]) {
                 document.getElementById('badgeStatusText').textContent = "Acces VIP Activ (48h)";
                 const msgEl = document.getElementById('vipFeedbackMsg');
                 if (msgEl) {
                     msgEl.textContent = "✓ Licență VIP activă pe acest dispozitiv.";
                     msgEl.className = "text-xs text-emerald-400 mt-2.5 font-medium";
                 }
-            } else {
-                localStorage.removeItem('laura_vip_expiry');
+            } else if (Object.keys(unlockedPostsMap).length > 0) {
+                document.getElementById('badgeStatusText').textContent = "Pachete Active (48h)";
             }
         }
 
+        // Activare cod VIP General din susul paginii
         function activateVIPKey() {
             const inputEl = document.getElementById('vipKeyInput');
             const msgEl = document.getElementById('vipFeedbackMsg');
@@ -304,10 +329,10 @@
 
             const enteredCode = inputEl.value.trim().toUpperCase();
 
-            if (validVipKeys[enteredCode]) {
+            if (packageCodes[enteredCode] === "ALL") {
                 const expiry = new Date().getTime() + (48 * 60 * 60 * 1000); // 48 ore
-                localStorage.setItem('laura_vip_expiry', expiry.toString());
-                vipExpiryTime = expiry;
+                unlockedPostsMap["ALL"] = expiry;
+                localStorage.setItem('laura_unlocked_packages', JSON.stringify(unlockedPostsMap));
 
                 document.getElementById('badgeStatusText').textContent = "Acces VIP Activ (48h)";
                 msgEl.textContent = "✓ Cod VIP activat cu succes! Tot conținutul este deblocat.";
@@ -318,6 +343,36 @@
             } else {
                 msgEl.textContent = "✕ Cod VIP incorect sau invalid. Verifică codul primit pe chat.";
                 msgEl.className = "text-xs text-rose-400 mt-2.5 font-medium";
+            }
+        }
+
+        // Activare cod specific direct pe o postare blocată
+        function unlockSpecificPost(postId) {
+            const inputEl = document.getElementById(`code-input-${postId}`);
+            const msgEl = document.getElementById(`code-msg-${postId}`);
+            if (!inputEl) return;
+
+            const enteredCode = inputEl.value.trim().toUpperCase();
+            const target = packageCodes[enteredCode];
+
+            if (target === postId || target === "ALL") {
+                const expiryTime = new Date().getTime() + (48 * 60 * 60 * 1000); // 48 ore
+                unlockedPostsMap[target] = expiryTime;
+                localStorage.setItem('laura_unlocked_packages', JSON.stringify(unlockedPostsMap));
+
+                if (target === "ALL") {
+                    document.getElementById('badgeStatusText').textContent = "Acces VIP Activ (48h)";
+                } else {
+                    document.getElementById('badgeStatusText').textContent = "Pachete Active (48h)";
+                }
+
+                renderFeed(document.querySelector('.bg-pink-600')?.id?.replace('filter-', '') || 'all');
+            } else if (target !== undefined) {
+                msgEl.textContent = "✕ Acest cod aparține altui pachet.";
+                msgEl.className = "text-[11px] text-amber-400 mt-1.5 font-medium";
+            } else {
+                msgEl.textContent = "✕ Cod incorect.";
+                msgEl.className = "text-[11px] text-rose-400 mt-1.5 font-medium";
             }
         }
 
@@ -450,6 +505,7 @@
                 renderFeed();
             }
         }
+        let isAdminVIP = false;
 
         function renderFeed(filter = 'all') {
             updateCounters();
@@ -463,8 +519,7 @@
             });
 
             filteredPosts.forEach(post => {
-                const isVIPActive = (vipExpiryTime && new Date().getTime() < vipExpiryTime) || isAdminVIP;
-                const isUnlocked = post.price === 0 || isVIPActive;
+                const isUnlocked = post.price === 0 || isAdminVIP || Boolean(unlockedPostsMap["ALL"]) || Boolean(unlockedPostsMap[post.id]);
 
                 const postCard = document.createElement('article');
                 postCard.className = "bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg space-y-4 p-4";
@@ -480,6 +535,20 @@
                     </div>
                 `).join('');
 
+                // Căsuța de activare cod direct pe pachetul blocat
+                const inlineUnlockBox = !isUnlocked ? `
+                    <div class="w-full max-w-xs pt-2 border-t border-white/10 mt-1">
+                        <div class="flex gap-1.5">
+                            <input type="text" id="code-input-${post.id}" placeholder="Ai cod pentru acest pachet?" 
+                                   class="w-full bg-gray-950/90 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-white placeholder-gray-400 uppercase focus:outline-none focus:border-amber-400">
+                            <button onclick="unlockSpecificPost(${post.id})" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold text-xs rounded-lg transition shrink-0">
+                                OK
+                            </button>
+                        </div>
+                        <p id="code-msg-${post.id}" class="text-[10px] text-gray-300 mt-1">Valabil 48h după activare</p>
+                    </div>
+                ` : '';
+
                 let mediaContent = '';
                 if (post.type === 'video' && post.videoUrls) {
                     let videosHTML = post.videoUrls.map(vUrl => `
@@ -493,17 +562,18 @@
                             ${isUnlocked ? `
                                 <div class="space-y-3">${videosHTML}</div>
                             ` : `
-                                <div class="relative rounded-xl overflow-hidden bg-gray-950 h-[380px]">
+                                <div class="relative rounded-xl overflow-hidden bg-gray-950 h-[430px]">
                                     <img src="IMG_20261108_165926_533.jpg" class="w-full h-full object-cover filter blur-2xl opacity-20">
-                                    <div class="absolute inset-0 bg-black/65 backdrop-blur-md flex flex-col items-center justify-center p-5 text-center space-y-3 z-10 rounded-xl">
-                                        <div class="w-11 h-11 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
+                                    <div class="absolute inset-0 bg-black/65 backdrop-blur-md flex flex-col items-center justify-center p-5 text-center space-y-2.5 z-10 rounded-xl">
+                                        <div class="w-10 h-10 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
                                             <i data-lucide="lock" class="w-5 h-5"></i>
                                         </div>
-                                        <h5 class="text-base font-bold text-white">Pachet Video (${post.videoUrls.length} Clipuri)</h5>
-                                        <p class="text-xs text-gray-300 max-w-xs">Donează ${post.price} LEI sau folosește un cod VIP sus în profil.</p>
+                                        <h5 class="text-sm font-bold text-white">Pachet Video (${post.videoUrls.length} Clipuri)</h5>
+                                        <p class="text-[11px] text-gray-300 max-w-xs">Donează ${post.price} LEI sau introdu codul primit pe chat:</p>
                                         <button onclick="openDonateModal('Pachet Video #${post.id}', ${post.price})" class="px-5 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 transition">
                                             Plătește cu Aircash (${post.price} LEI)
                                         </button>
+                                        ${inlineUnlockBox}
                                     </div>
                                 </div>
                             `}
@@ -524,20 +594,21 @@
 
                     mediaContent = `
                         <div class="relative rounded-xl overflow-hidden">
-                            <div class="grid ${gridCols} gap-2 rounded-xl overflow-hidden ${!isUnlocked ? 'min-h-[340px]' : ''}">
+                            <div class="grid ${gridCols} gap-2 rounded-xl overflow-hidden ${!isUnlocked ? 'min-h-[380px]' : ''}">
                                 ${imagesHTML}
                             </div>
 
                             ${!isUnlocked ? `
-                                <div class="absolute inset-0 bg-black/65 backdrop-blur-md flex flex-col items-center justify-center p-5 text-center space-y-3 z-10 rounded-xl">
-                                    <div class="w-11 h-11 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
+                                <div class="absolute inset-0 bg-black/65 backdrop-blur-md flex flex-col items-center justify-center p-5 text-center space-y-2.5 z-10 rounded-xl">
+                                    <div class="w-10 h-10 bg-pink-500/20 rounded-full flex items-center justify-center text-pink-400">
                                         <i data-lucide="lock" class="w-5 h-5"></i>
                                     </div>
-                                    <h5 class="text-base font-bold text-white">Galerie Foto (${post.mediaUrls.length} Poze)</h5>
-                                    <p class="text-xs text-gray-300 max-w-xs">Donează ${post.price} LEI sau folosește un cod VIP sus în profil.</p>
+                                    <h5 class="text-sm font-bold text-white">Galerie Foto (${post.mediaUrls.length} Poze)</h5>
+                                    <p class="text-[11px] text-gray-300 max-w-xs">Donează ${post.price} LEI sau introdu codul primit pe chat:</p>
                                     <button onclick="openDonateModal('Galerie Foto #${post.id}', ${post.price})" class="px-5 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold rounded-xl shadow-lg active:scale-95 transition">
                                         Plătește cu Aircash (${post.price} LEI)
                                     </button>
+                                    ${inlineUnlockBox}
                                 </div>
                             ` : ''}
                         </div>
@@ -695,7 +766,7 @@
             privacyShield.classList.remove('flex');
         });
 
-        loadSavedVIP();
+        loadSavedUnlocks();
         lucide.createIcons();
         renderFeed();
     </script>
