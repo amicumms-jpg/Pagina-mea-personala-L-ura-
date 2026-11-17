@@ -144,6 +144,26 @@
                         <span class="text-xs bg-pink-500/20 text-pink-300 px-3 py-1 rounded-full font-medium">Scrie pe chat 💬</span>
                     </button>
                 </div>
+
+                <!-- Secțiune Cheie Oficială de Activare (Valabilă 48h) -->
+                <div class="mt-4 bg-gray-950/90 border border-amber-500/40 rounded-2xl p-4 shadow-inner">
+                    <div class="flex items-center gap-2 mb-3">
+                        <i data-lucide="key-round" class="w-4 h-4 text-amber-400"></i>
+                        <span class="text-sm font-bold text-white">Ai primit o cheie oficială de activare?</span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="activationKeyInput" placeholder="LAURA-VIP-XXXX" 
+                               class="flex-grow bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 uppercase tracking-wider focus:outline-none focus:border-amber-400 transition">
+                        <button onclick="activateAccessKey()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold text-sm rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg active:scale-95 shrink-0">
+                            <i data-lucide="check" class="w-4 h-4 stroke-[2.5]"></i>
+                            <span>Activează</span>
+                        </button>
+                    </div>
+                    <p id="keyFeedbackMsg" class="text-xs text-gray-400 mt-2.5">
+                        Introdu codul primit pe chat pentru a debloca instant accesul (valabil 48h).
+                    </p>
+                </div>
+
             </div>
         </section>
 
@@ -243,7 +263,7 @@
 
             <div class="bg-gray-800/50 p-4 rounded-xl mb-5 border border-gray-700/50 text-center">
                 <p class="text-sm font-semibold text-pink-300 mb-1">Scrie pe chat pentru mai multe informații și detalii de plată!</p>
-                <p class="text-xs text-gray-400">Îți voi trimite datele necesare pentru plata prin Zen Pay, Revolut sau transfer imediat ce scrii pe chat.</p>
+                <p class="text-xs text-gray-400">Îți voi trimite datele necesare și codul de activare imediat ce scrii pe chat.</p>
             </div>
 
             <button onclick="closeOtherPaymentModal(); if(typeof Tawk_API !== 'undefined') Tawk_API.toggle();" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-pink-500 font-bold rounded-xl text-white shadow-lg transition mb-3">
@@ -271,9 +291,98 @@
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        let userTier = 0; // 0: Vizitator simplu, 100: VIP complet
+        let userTier = 0; // 0: Vizitator simplu, 25: Poze, 50: Video, 100: VIP complet
 
-        // Date Postări (Inclusiv noua postare video exclusivă cu titlu atractiv)
+        // --- LISTA CULORILOR / CODURILOR DE ACCES (VALABILE 48 ORE) ---
+        const validKeys = {
+            // Pachet 25 LEI (Poze)
+            "LAURA-POZE-25-01": { tier: 25, label: "Acces Poze (48h)" },
+            "LAURA-POZE-25-02": { tier: 25, label: "Acces Poze (48h)" },
+            "LAURA-POZE-25-03": { tier: 25, label: "Acces Poze (48h)" },
+            "LAURA-POZE-25-04": { tier: 25, label: "Acces Poze (48h)" },
+            "LAURA-POZE-25-05": { tier: 25, label: "Acces Poze (48h)" },
+            "LAURA-POZE-25-06": { tier: 25, label: "Acces Poze (48h)" },
+            "LAURA-POZE-25-07": { tier: 25, label: "Acces Poze (48h)" },
+            "LAURA-POZE-25-08": { tier: 25, label: "Acces Poze (48h)" },
+            "LAURA-POZE-25-09": { tier: 25, label: "Acces Poze (48h)" },
+            "LAURA-POZE-25-10": { tier: 25, label: "Acces Poze (48h)" },
+
+            // Pachet 50 LEI (Video)
+            "LAURA-VIDEO-50-01": { tier: 50, label: "Acces Poze + Video (48h)" },
+            "LAURA-VIDEO-50-02": { tier: 50, label: "Acces Poze + Video (48h)" },
+            "LAURA-VIDEO-50-03": { tier: 50, label: "Acces Poze + Video (48h)" },
+            "LAURA-VIDEO-50-04": { tier: 50, label: "Acces Poze + Video (48h)" },
+            "LAURA-VIDEO-50-05": { tier: 50, label: "Acces Poze + Video (48h)" },
+            "LAURA-VIDEO-50-06": { tier: 50, label: "Acces Poze + Video (48h)" },
+            "LAURA-VIDEO-50-07": { tier: 50, label: "Acces Poze + Video (48h)" },
+            "LAURA-VIDEO-50-08": { tier: 50, label: "Acces Poze + Video (48h)" },
+            "LAURA-VIDEO-50-09": { tier: 50, label: "Acces Poze + Video (48h)" },
+            "LAURA-VIDEO-50-10": { tier: 50, label: "Acces Poze + Video (48h)" },
+
+            // Pachet 100 LEI (VIP Complet)
+            "LAURA-VIP-100-01": { tier: 100, label: "Acces Complet VIP (48h)" },
+            "LAURA-VIP-100-02": { tier: 100, label: "Acces Complet VIP (48h)" },
+            "LAURA-VIP-100-03": { tier: 100, label: "Acces Complet VIP (48h)" },
+            "LAURA-VIP-100-04": { tier: 100, label: "Acces Complet VIP (48h)" },
+            "LAURA-VIP-100-05": { tier: 100, label: "Acces Complet VIP (48h)" },
+            "LAURA-VIP-100-06": { tier: 100, label: "Acces Complet VIP (48h)" },
+            "LAURA-VIP-100-07": { tier: 100, label: "Acces Complet VIP (48h)" },
+            "LAURA-VIP-100-08": { tier: 100, label: "Acces Complet VIP (48h)" },
+            "LAURA-VIP-100-09": { tier: 100, label: "Acces Complet VIP (48h)" },
+            "LAURA-VIP-100-10": { tier: 100, label: "Acces Complet VIP (48h)" }
+        };
+
+        function checkSavedAccess() {
+            const savedExpiry = localStorage.getItem('laura_key_expiry');
+            const savedTier = localStorage.getItem('laura_key_tier');
+            const savedLabel = localStorage.getItem('laura_key_label');
+
+            if (savedExpiry && savedTier) {
+                if (new Date().getTime() < parseInt(savedExpiry)) {
+                    userTier = parseInt(savedTier);
+                    document.getElementById('badgeStatusText').textContent = savedLabel || "Acces Activ (48h)";
+                    const feedbackEl = document.getElementById('keyFeedbackMsg');
+                    if (feedbackEl) {
+                        feedbackEl.textContent = "✓ Licență activă pe acest dispozitiv (" + savedLabel + ").";
+                        feedbackEl.className = "text-xs text-emerald-400 mt-2.5 font-medium";
+                    }
+                } else {
+                    // Expirat după 48h
+                    localStorage.removeItem('laura_key_expiry');
+                    localStorage.removeItem('laura_key_tier');
+                    localStorage.removeItem('laura_key_label');
+                }
+            }
+        }
+
+        function activateAccessKey() {
+            const inputEl = document.getElementById('activationKeyInput');
+            const feedbackEl = document.getElementById('keyFeedbackMsg');
+            const enteredCode = inputEl.value.trim().toUpperCase();
+
+            if (validKeys[enteredCode]) {
+                const keyData = validKeys[enteredCode];
+                const expiryTime = new Date().getTime() + (48 * 60 * 60 * 1000); // 48 ore
+
+                localStorage.setItem('laura_key_expiry', expiryTime.toString());
+                localStorage.setItem('laura_key_tier', keyData.tier.toString());
+                localStorage.setItem('laura_key_label', keyData.label);
+
+                userTier = keyData.tier;
+                document.getElementById('badgeStatusText').textContent = keyData.label;
+
+                feedbackEl.textContent = "✓ Cod activat cu succes! " + keyData.label + " este acum deblocat.";
+                feedbackEl.className = "text-xs text-emerald-400 mt-2.5 font-semibold";
+                inputEl.value = "";
+
+                renderFeed();
+            } else {
+                feedbackEl.textContent = "✕ Cod invalid sau incorect. Verifică codul primit pe chat.";
+                feedbackEl.className = "text-xs text-rose-400 mt-2.5 font-medium";
+            }
+        }
+
+        // Date Postări
         const posts = [
             {
                 id: 1,
@@ -700,6 +809,7 @@
         });
 
         // Inițializare pagină
+        checkSavedAccess();
         lucide.createIcons();
         renderFeed();
     </script>
